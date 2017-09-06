@@ -13,3 +13,5 @@ java.util.concurrent.atomic包中的原子类的操作
 CompareAndSwapInt CompareAndSwapLong CompareAndSwapObject
 
 AtomicBoolean 的操作则是将boolean转换为整型再来进行操作。
+
+SPA：Singleton Page Application 单页应用：所有跳转全部在一个页面

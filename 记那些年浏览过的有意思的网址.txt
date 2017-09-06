@@ -25,3 +25,5 @@ http://geek.csdn.net/news/detail/235232 并发编程的5个技巧，两点有用
 http://blog.csdn.net/wemedia/details.html?id=40867 程序员鄙视链
 http://blog.csdn.net/wemedia/details.html?id=42127 程序员高逼格指南，不是该网站小编原创，看着玩玩
 http://blog.csdn.net/wemedia/details.html?id=41325 六代单传老代码 能不能动
+http://www.csdn.net/article/a/2010-03-31/217683    开源界5大协议 必看
+

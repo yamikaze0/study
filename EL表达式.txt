@@ -1,0 +1,23 @@
+EL表达式
+形式  ${}
+用来查找属性
+
+${user.name}
+当作页面使用了上述表达式，那么服务器就会依次在pageContext,request,session,application四个域对象中寻找名为user的属性对象
+如果找到就返回，如果四个对象中都没有就返回null，并且在页面上什么都不显示
+也就是说使用这个表达式就相当于调用了pageContext的findAttribute(String name)这个方法
+
+注意：
+1.如果查找的这个对象存在，但是要查找的属性不存在会抛出异常
+  即${user.name} user对象存在，但是user对象不存在name属性
+
+2。如果查找对象存在，属性也存在，但是属性没有getter和setter方法，也会抛出异常。无论属性访问级别是什么
+   即${user.name} user对象存在，user存在name属性，但是user中没有setName()和getName()。
+
+3 EL表达式无法在html等静态页面使用
+
+除此之外，EL表达式还可以用来获取请求参数 ${param.参数名}
+								请求头${header.请求头名}
+
+EL表达式还可以使用操作符
+如${2+3} 会在页面上输出5

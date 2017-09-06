@@ -1,0 +1,21 @@
+下载subversion安装到电脑并将bin路径加入到环境变量中
+
+SVN管理工具包括客户端和服务端
+具体流程参考java picture中的svn流程
+
+1、创建root工厂目录
+2、启动svn的服务
+	svnserve -d -r d:\svn\root（Linux下使用）
+	-d表示后台运行 -r后面跟的是第一步下创建的root目录的路径
+	如果是windows需要将服务加到windows的服务中去
+	
+	sc create svnserve binPath= "D:\svn\Subversion\bin\svnserve -r d:\svn\root --service"
+	
+	sc create表示创建一个服务，sc delete删除一个服务
+	svnserve服务的名称，binPath服务的路径，在路径后面一定要加上有一个空格    --service表示加到windows的服务管理中
+	
+	命令完成后在windows的服务中设置自动启动就完成了
+
+3、创建项目工厂
+	svnadmin create oa 表示创建了一个oa的项目
+	具体流程参考java picture中的svn具体流程

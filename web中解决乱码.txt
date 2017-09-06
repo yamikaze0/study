@@ -1,0 +1,34 @@
+在web应用中会涉及到编码的问题。如果编码不正确就会导致乱码。
+
+解决get请求的乱码
+1.在server.xml的Connector中配置  URIEncoding = "utf-8"
+2.浏览器提交给服务器是采用GBK编码，我们可以先将得到的字符串转换为提交前的字符串在转为我们可接受的字符串
+如下所示
+	String myname = request.getParameter("username");
+	//浏览器默认的编码GBK 不同浏览器可能不同
+	//解码在转码
+	myname = new String(myname.getBytes("iso-8859-1"), "UTF-8");
+	System.out.println(myname);
+	
+
+解决POST请求的乱码
+
+如果在请求过程中使用的是POST请求，那么上述方法就不能解决乱码问题了。要解决POST请求的乱码
+可以在获取参数前加上
+	request.setCharacterEncoding("UTF-8"); 就可以解决POST请求的乱码，但是这句话不能解决GET请求的乱码
+
+	
+解决响应正文的乱码
+
+由于服务器返回的信息编码可能与浏览器使用的编码不一致。那么响应的信息呈现给用户就是乱码。
+解决这个问题可以在响应前加上
+	response.setContentType("text/html;charset=UTF-8"); 意思就是告诉浏览器我响应信息是采用这种编码。浏览器就会根据这个格式来解码
+
+除了这种方式以外，也可以加上
+	response.addHeader("Content-type","text/html");
+	response.setCharacterEncoding("UTF-8"); //发送字节流的编码为UTF-8
+这种方式与上面效果一致，推荐使用第一种
+
+此外每个Servlet要解决乱码都需要这样做太过麻烦，所以推荐使用Filter过滤器来解决编码问题。也可以使用ServletContext来解决请求的乱码
+以上方式可以解决大部分乱码
+	

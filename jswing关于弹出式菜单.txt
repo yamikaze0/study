@@ -1,0 +1,14 @@
+在java中，有两种弹出式菜单
+
+1.JFrame窗体中的菜单
+
+这种菜单使用JPopupMenu类创建
+继承树:Object-->Component-->Container-->JComponent-->JPopupMenu
+
+2.系统托盘的菜单
+
+这种菜单使用PopupMenu类创建
+继承树:Object-->MenuComponent-->MenuItem-->Menu-->PopupMenu
+
+JPopupMenu和JPopupMenu继承于不同的类(继承树完全不同)
+也就是说两个类的对象不能相互转换，同时在JFrame中使用add()方法添加PopupMenu的对象也会报错

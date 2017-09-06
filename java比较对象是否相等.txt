@@ -1,0 +1,26 @@
+java中比较对象的方法
+== 比较的是对象的引用 但基本类型的包装类型可以使用==比较值是否相等，相等的前提为未new
+Integer in1 = new Integer(1); 
+Integer in2 = new Integer(1);
+System.out.println(in1 == in2);//false 虽然值相同 但是对象引用的地址不同
+
+Integer i1 = 111;
+Integer i2 = 111;
+System.out.println(i1 == i2); //true 
+Integer的值如果在 -127到128之间，使用==就可以比较(不包含128，即128时为false，下线是-128，包含了-128)
+如果Integer的值超出了这个范围 ==比较就是比较两个Integer对象
+这是因为Java -127-128是从缓冲区取得，所以可以直接用==比较，但是超出了这个范围就是new的
+
+Integer i1 = 130;
+Integer i2 = 130;
+System.out.println(i1 == i2); //false
+
+String str1 = "1";
+String str2 = "1";
+System.out.println(str1 == str2);//String 类没有new 相同的字符串会从字符池中寻找 即str1与str2指向的是同一个位置
+
+为什么重写equals方法时要重写hashCode方法
+1.在一个应用程序执行期间，如果一个对象的equals方法做比较所用到的信息没有被修改的话，
+那么，对该对象调用hashCode方法多次，它必须始终如一地返回 同一个整数。
+2.如果两个对象根据equals(Object)方法是相等的，那么调用这两个对象中任一个对象的hashCode方法必须产生同样的整数结果。
+3.如果两个对象根据equals(Object)方法是不相等的，那么调用这两个对象中任一个对象的hashCode方法，不要求必须产生不同的整数结果。然而，程序员应该意识到这样的事实，对于不相等的对象产生截然不同的整数结果，有可能提高散列表（hash table）的性能。

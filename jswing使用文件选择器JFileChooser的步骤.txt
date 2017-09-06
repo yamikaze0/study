@@ -1,0 +1,22 @@
+		JFileChooser jfc = new JFileChooser();
+		
+		//支持多选
+		jfc.setMultiSelectionEnabled(true);
+		
+		//设置选择内容，是否仅选择文件，或者目录，或者两者都可以选择 
+		jfc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+		
+		//显示文件选择框
+		int i = jfc.showOpenDialog(that);
+		
+		//如果选择了文件
+		if(i==JFileChooser.APPROVE_OPTION) {
+		    
+		    //获取选择的文件数组。此外还有个getSelectFile()方法
+		    File[] fs = jfc.getSelectedFiles();
+		    for(File f:fs) {
+			System.out.println(f.getName()+"\n"+f.getPath());
+			System.out.println("--------------->分割线<-------------------");
+		    }
+		    
+		}

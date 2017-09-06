@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Vue 测试实例 - 菜鸟教程(runoob.com)</title>
+<script src="https://cdn.bootcss.com/vue/2.2.2/vue.min.js"></script>
+</head>
+<body>
+	<!--<p class="content">{{message}}222</p>-->
+<div class="content">
+	{{message}}                      <!--可以绑定-->
+    <div v-html="message">3333</div> <!--v-model与这种绑定不了-->
+	<!--改为v-model实现双向数据绑定-->
+    <input v-model="message"/> {{ tipMessage1 }} <!--当methods里的有方法同名时,会返回methods里的方法体,这时候应该作为函数调用 eg tipMessage()才行-->
+	<!--v-on绑定事件 tipMessage是方法名-->
+	<input type="button" v-on:click="tipMessage" data = "110" value="v-on:cilck可以缩写为@click，你也可以使用内联的js语句"/>
+	<a v-bind:href="url">使用v-bind绑定属性到百度首页，v-bind可以缩写为: 即这儿采用:href效果一样的</a>
+	<div>
+	<p v-if="seen">v-if条件是否显示</p>
+	<p v-else-if="seen">显示毛线 </p>
+	<p v-else>Sorry </p>
+	</div>
+	<p>{{id | format}}</p>
+	用管道符指定过滤器。管道符是js函数的形式，可以用| 指定多个过滤器，其中id是format过滤器的第一个参数
+	
+	<!--循环遍历-->
+	<p v-for="site in sites">
+		{{site.name}}
+	</p>
+	<input type="hidden"  id="sd" v-model="src.number"/>
+</div>
+	
+<script>
+//var data = {message:'我的消息'} 
+var vm = new Vue({ //new Vue() 构造起
+  el: '.content',//只会填充第一个，不管是id还是class
+  data: {
+    message: '<h1>菜鸟教程11111</h1>',
+	url:"http://www.baidu.com/",
+	seen:false,
+	id:"12345d",
+	src: {
+		number:1
+	},
+	sites:[
+		{name:1},
+		{name:2},
+		{name:3}
+	]
+  },
+  
+  //data: data,//这样vm.message == data.message 为true，而且vm.message = 1,data.message 也会变为1。
+  //如果不想改变data的值，则vm.$message = "1";即可
+  methods: { //声明方法
+	tipMessage : function() {
+		return 1;
+		//alert(this); //this指向vm
+	}
+  },
+  filters:{
+	format : function(value) {
+		return parseInt(value);
+	}
+  },
+  computed: { //computed用于计算属性
+			 //我们可以使用 methods 来替代 computed，效果上两个都是一样的，
+			 //但是 computed 是基于它的依赖缓存，只有相关依赖发生改变时才会重新取值。而使用 methods ，在重新渲染的时候，函数总会重新调用执行。
+	tipMessage1: function(){ //调用方法时相当于 调用//getter方法，且computed默认属性只有getter
+		return 123;
+	},
+	 site: { //可以这样设置get set
+      // getter
+      get: function () {
+        return this.name + ' ' + this.url
+      },
+      // setter
+      set: function (newValue) {
+        var names = newValue.split(' ')
+        this.name = names[0]
+        this.url = names[names.length - 1]
+      }
+    }
+  }
+})
+vm.site = "12345678"; //相当于调用了site的set方法
+//alert(data.message);
+
+setTimeout(function(){
+	alert(1);
+	document.getElementById("sd").value = 111;
+	alert(vm.src.number);
+},10000)
+</script>
+</body>
+</html>

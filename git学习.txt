@@ -1,0 +1,146 @@
+git分布式  SVN集中式
+SVN集中式版本控制系统，版本库是集中存放在中央服务器的，开发时需要开发人员从版本库Check Out最新版本，开发完后再Commit提交给服务器。
+且集中式版本控制系统需要互联网才能工作，如果是局域网，也必须要能访问服务器。
+
+git分布式：
+每个开发人员电脑都有一个版本库，若一个人版本库出了问题，可以从其他人那儿拷贝一份就可以回复工作了，但是SVN服务器崩溃后所有人都不能工作了。
+分布式版本控制的每个节点都是完整仓库。
+
+git 分布式版本控制系统
+需要在电脑安装 git服务和git客户端(可视化工具)
+git只能监控文本文件、程序代码。可以知道改动了什么。但图像、视频、二进制文件无法追踪，只能知道有100K改为了120K，
+具体改了什么，git无法知道。
+
+1、建立版本仓库
+   新建一个文件夹 hello，cmd进入当前目录 执行指令 git init就初始化了一个仓库了，通常来讲，一个仓库对应一个单一项目。
+
+2、仓库中会有一个.git的隐藏文件夹，这文件夹里面包括了当前仓库的配置信息config、当前仓库的版本信息、当前仓库缓存区index/stage文件。
+   还有表示当前版本的HEAD文件。除此之外、还有些log日志文件等。
+   
+3、在仓库所在文件夹新建一个文件readme.txt，在里面编辑Hello Git!!! 然后使用指令 git add readme.txt 将其添加到缓存区中。
+   然后使用git commit -m "message" 添加到版本库中，这儿的message表示你自己提交文件的信息，比如标注对文件做了哪些修改等。
+
+4、在第三步建立的readme.txt所在的文件夹称为工作区，即电脑上能看到的目录。    -------- 工作区
+   而使用git add指令是将文件添加到了缓存区，即.git中的index或者stage文件。   -------- 缓存区
+   而使用git commit指令是将文件从缓存区提交到了版本库中。                    -------- 版本库
+   文件必须先添加到缓存区再由缓存区提交到版本库中。
+   比如：新建了一个log.txt文件，在里面编辑了 Git is version control 使用git add(可以一次性add多个文件，文件名用空格隔开)
+   添加到缓存区，然后再由git commit从缓存区提交到版本库中。这时再对log.txt进行编辑加入SVN is also version control。
+   编辑完成后使用git commit提交，版本库中log.txt的内容依旧是Git is version control。当然提交时可以使用git commit -am “message”
+   指令是可以直接提交的。但是使用am参数时 提交的文件必须之前至少被提交到缓存区一次，否则不会成功。
+   git pull <remote> <branch> 从仓库得到最新的文件。
+   
+5、git status 查看工作区状况，默认是完整输出，如果只想看到简短输出可以加上参数-s 例如：git status -s 获取当前工作区的状态。
+   当前工作区和缓存区如果没有提交的文件，且文件与版本库的文件一致，会显示 nothing to commit，working tree clean。
+   如果缓存区有文件没有提交，则会显示有哪些文件没有提交，如果commit后修改了原文件而没有加入到缓存区，会提示修改内容，并且
+   会提示添加到缓存区并提交。可以这样认为，commit后缓存区就被清空了。
+
+6、第一次commit时会提示你配置你的名字与邮箱。配置指令 git config
+   说说git的配置文件吧！
+   git有三个配置文件，从优先级低的开始说： /etc/config 这里面存放的是所有用户的通用设置。 对应指令git config --system
+                                           ~/.gitconfig 存放的是当前用户的配置，在用户的家目录，windows用户一样 对应指令 git config --global
+										   /.git/config  存放当前项目的配置 对应指令git config 会一层一层覆盖
+	可以使用指令 git config --global user.name "yamikaze" 这样就配置了全部用户名yamikaze
+	             git config --global user.name = "yamikaze" 这种用法是错误的
+	查看所有配置 使用 git config --system --list
+	查看某一个配置    git config --system username 查看系统配置的用户名，不加--system 则是获取当前配置
+	                                               例如：system：yamikaze0，global：yamikaze1 当前仓库：yamikaze2
+												   当前所在路径为当前仓库 则输出yamikaze2，当前用户则输出yamikaze1
+7、使用git diff比较两个版本的文件不同。
+   例如：版本库中有个版本号为2的文件(实际SVN采用1、2、3..作为版本号，而git使用的是sha1算法计算出来的一个很长的字符串作为版本号)
+         还有个版本号为3的文件，当前版本号为HEAD、工作区还有一个修改但未提交的文件
+   ps：git使用git log查看提交日志，提交日志会有提交对应的版本号，时间，提交信息等。最新版本号可以使用HEAD代替
+       如果感觉显示信息过多，可以使用 --pretty=oneline，这样只显示版本号以及信息。使用参数-graph查看历史中什么时候出现了分支。
+   例如：git diff bb64b5 afd0c6 会显示bb64b5与afd0c6版本的区别。bb64b5只是版本号的前几位，不用全部输入，只需输入前几位git会自动帮你查找对应版本。
+         git diff readme.txt 会比较最新版本与工作区文件的区别。
+
+8、版本回退。如果昨天你commit了一个文件，今天你发现有错误，需要撤销这些错误，可以使用git reset指令。
+   git reset --hard 版本号 就可以回到版本号。ps：回到以前的版本，那么这之后提交的版本就看不到
+   那这怎么办？找不到commit的id就无法回退，也无法穿越到最新版本。这时你可以使用指令git reflog 显示你的提交指令。类似linux的history指令。
+   
+9、你突然发现一个文件错误，你想从版本库删除掉他，这该怎么办？ ps：前提是没有推送到远程版本库中。
+   ① 执行git rm 文件名，这种方式会从版本库以及工作区的文件全部删除。且被删除的文件不存在于缓存区。ps：提交信息不能为空。
+   ② 直接删除工作区文档，再执行git rm指令。 ps：git mv指令是移除仓库对该文件的托管。
+   如果你删除了文件：
+        文件存在于版本库时： 使用指令 git checkout -- file 恢复文件 其实是用版本库的文件替换工作区的文件。这指令也可以做撤销操作。
+		文件不存在于版本库： 使用指令 git reset Head 再执行 git checkout -- file。ps：直接使用git checkout -- file是不能成功的。
+
+10、如果你正在使用远程仓库，比如github。
+    这时你在本地有一个仓库，在github也创建了一个同名仓库，这时你想将两个仓库关联起来可以使用以下指令：
+	git remote add origin git@com:username/repositoryName.git 这样就与关联起来了。//origin为远程仓库的名字。可以随意取，一般为origin
+	关联后使用git push -u origin master将本地仓库的内容推送到远程仓库，但需要配置你的SSH key，Github是用过SSH key方式加密传输的。
+	如何生成SSH key：
+	               Linux：  打开shell，输入ssh-keygen -t rsa -C "你的邮箱"，然后一路回车键直到在用户目录下生产 .ssh目录
+							打开.ssh目录,里面有两个文件id_rsa(私匙)和id_rsa.pub(公匙，可以给别人看)，然后登陆Github，将公匙的内容粘贴上去绑定，可以绑定多个SSH Key。
+				   Windows：找到git安装目录，点击git-bash.exe文件，输入与Linux相同的指令。操作一毛一样。
+	移除远程库：git remote rm origin(远程仓库名) //注意关联的远程仓库不用同名
+	从远程仓库克隆：git clone git@github.com:yamikaze0/hello-world.git <dire> 没有加上目录则克隆到当前目录。这目录可以是一个git仓库，但最好不要这么做。
+							  地址可以使http协议的，但git原生的速度最快。
+
+11、git的分支管理
+    每次commit，git都把他们串成一条时间线，这条时间线就是一个分支。创建仓库时，git会自动创建一个分支，这个分支叫做主分支(master),HEAD严格来讲并不是只想提交的，而是指向当前分支。
+	没有其他分支时，HEAD也就是指向master。
+    a) 创建分支 git checkout -b 分支名，也可以使用指令git branch 分支名创建分支并切换，然后git checkout 分支名。ps：前面的checkout后面有加--，不加表示切换分支。
+	b) git branch 查看分支，显示所有分支。前面带有*号的表示当前分支。然后commit时记得切换回正确的分支。-r参数显示所有远程分支。
+	c) 合并分支。使用指令 git merge 分支名。将指定分支名合并到当前分支。比如当前分支为master，指定分支dev，则会将指定分支dev合并到master。合并后分支dev可以删除。
+	d) 删除分支。git branch -d 分支名。例如：git branch -d dec
+	e) 分支冲突。当add文件进缓存区，请不要在commit前切换分支。当分支合并有冲突时，先解决冲突再合并。
+	   个人理解：分支合并是合并两个分支不同时持有的文件，如果有同时持有的文件，那么最好只对文件进行增加删除，不要进行修改操作，否则会手动合并分支。
+	f) 分支合并策略。分为两种策略 fast forward和recursive。ff策略删除分支后会丢失分支信息，可以在分支合并时使用参数--no-ff 禁用ff策略。但不用ff策略时会有一个commit，所以要加上-m ""
+		master是主分支，一般不在这个分支上开发项目，建立用其他分支开发，发布时合并到master分支上进行发布。
+	g) bug分支。如果发现一个bug，需要在2小时之内修复这个bug，但现在在dev分支上的工作需要1天才能完成提交。这个时候可以使用git stash指令。这指令可以将当前工作现场保存起来，
+	   等以后恢复现场后继续工作。
+	   1、使用git stash保存工作现场
+	   2、切换到要修复bug的分支创建临时分支。
+	   3、修复bug并切换到修复分支合并bug分支，然后删除bug分支。
+	   git stash list可以查看保存的工作现场，可以使用git stash apply恢复现场，但是数据不会删除，需要使用git stash drop来删除
+											 也可以使用git stash pop完成恢复和删除。
+	h) Feature分支。每当开发一个新功能时，总是建立一个分支。删除未合并的分支使用命令 git branch -D 分支名(区别删除分支小写的d)
+
+12、远程仓库
+    查看远程仓库信息：git remote //显示远程仓库的名字。一个项目可以有多个远程仓库，但一般配置一个，不建议配置多个。
+	推送到远程仓库：git push 仓库名 分支名，例如：推送master分支到origin仓库：git push origin master //注意SSH key配置后才能推送。
+    哪些分支要推送到远程：master分支，dev分支、bug分支不用、Feature分支看是否多人协作。
+	如果推送到远程仓库报错怎么办？
+	             1、使用指令 git pull 远程仓库名 分支名 先获取远程的文件然后合并自己要推送的分支在进行推送操作
+				 2、使用参数-f强制推送，但这样会丢弃远程仓库的数据，不建议这么做？
+				    git push origin master -f //其他办法屁用没有，就这个问题解决了我问题
+					推送时注意推送的分支，如果远程仓库没有分支，则会新建立一个分支。
+	
+13、标签管理：便于打包发布
+    发布一个版本时，我们通常先在版本库中打一个标签（tag），这样，就唯一确定了打标签时刻的版本。将来无论什么时候，取某个标签的版本，就是把那个打标签的时刻的历史版本取出来。所以，标签也是版本库的一个快照。
+	在git中打标签：
+	             1、切换到要打标签的分支上：git checkout master
+				 2、输入指令 git tag v1.0就打上标签了。默认标签是打在最新的commit上的，可以对一个commit打多个标签，但最好不要这么做
+				 3、可以输入git tag查看标签。
+				 4、同时也可以对commit id打标签：git tag v1.5 commitId
+				 5、使用 git show v1.5查看v1.5标签的具体信息。
+				 6、创建带有说明的标签，eg git tag -a v0.1 -m "message" commitId
+				 7、如果有必要可以使用参数-s给tag一个签名，签名使用PGP签名，因此必须首先安装gpg
+				 8、删除标签 git tag -d tagName
+	创建的标签只保存在本地，不会自动进行远程推送，如果要远程推送标签使用指令 git push remoteRepositiry tagName
+	                         或者一次性推送本地未远程推送的标签：git push remoteRepository --tags
+	如果标签已经远程推送了要删除？
+	             1、先删除本地标签：git tag -d tagName
+				 2、使用push删除远程 git push origin：refs/tags/tagName//好像没得用
+14、自定义git：可以修改git的输出文字的颜色等。
+15、忽略文件 .gitingore
+    编写这个文件可以忽略某些文件不保存到版本库中。该文件放在git工作目录下。同时该文件也可以被git所管理，如果不想被管理，记得在文件加上.gitignore就会忽略这个文件
+	当add操作被忽略的文件时 会报错。当然你可以使用git add -f my.ini强制添加到git
+	或者你可以使用指令：git check-ignore -v fileName 查看是忽略文件哪儿写错了
+16、配置别名：git config --global alias lg "log --color --graph --pretty=format:'%Cred%h%Creset - -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+	git config配置后的东西可以在git的配置文件中找到的。所以你也可以直接修改配置文件。
+17、查看日志：git log
+    --oneline 显示一行
+	--graph 查看什么时候出现了分支
+	--reverse 反转显示日志
+	--author username 查看是谁提交了代码
+
+具体指令参数参考文档
+安装git服务器：
+1、安装git服务
+2、创建一个git用户专门用来运行git服务
+3、收集所有需要登录用户的公匙将它们导入/home/.ssh/authorized_keys文件中
+4、选定一个目录作为仓库，并输入以下指令 git init --bare file.git //公有仓库一般.git结尾
+5、禁止第二部创建的用户登录
+6、在个人电脑上克隆仓库：git clone git@github.com:yamikaze0/helloworld.git

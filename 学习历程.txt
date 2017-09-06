@@ -1,0 +1,55 @@
+Mybatis 与 Hibernate (持久层ORM)              持久层框架                   源码深入理解
+Redis   与 Memcache  (cache)                  缓存                         熟练掌握，了解原理
+git     与 SVN       (Version Control)        版本控制工具                 熟练使用，了解原理
+Spring、Spring Boot  (IOC、AOP)               项目解耦、快速部署           Spring源码、Spring Boot理解原理
+IO      与 NIO       (Speed)                  读写性能                     深入理解
+Thead   与 Thread Pool Java.util.cocureent.*  并发                         深入理解
+Linux                                         项目运行环境                 熟练使用、能排查错误
+JVM、JMM、GC、Java工具                        基础                         基础、深入理解
+
+other：
+java 基础                                                                  基础中的基础
+java 集合类(HashMap、ArrayList、LinkedList)                                同上
+java Exception                                                             了解异常机制
+java 类、接口、抽象类                                                      基础
+Tomcat结构                                    服务器结构                   了解服务器原理
+Mysql数据库                                   数据存储                     熟练使用
+IDE                                           开发工具(Eclipse、IEDA)      熟练使用
+Design Model                                  设计模式                     精通
+专业名词                                      可以装B                      了解
+
+安装jar包到本地仓库
+mvn install:install-file -DgroupId=com.alipay.api -DartifactId=k12-alipay-sdk -Dversion=0.0.1-beta -Dpackaging=jar -Dfile=F:\alipay-sdk-JAVA-20170725114609\alipay-sdk-java20170725114550.jar
+
+扫码二维码：
+AlipayTradePrecreateRequest
+电脑：
+AlipayTradePagePayRequest
+手机app：
+AlipayTradeWapPayRequest
+
+取消：
+AlipayTradeCancleRequest
+退款：
+AlipayTradeRefundRequest
+退款查询：
+AlipayTradeFastpayRefundQueryRequest
+交易查询：
+AlipayTradeQueryRequest 
+账单下载：
+AlipayDataDataserviceBillDownloadurlQueryRequest 
+订单关闭：
+AlipayTradeCloseRequest 
+
+步骤：
+1、得到AlipayClient
+AlipayClient client = new DefaultAlipayClient("https://openapi.alipay.com/gateway.do", APP_ID, APP_PRIVATE_KEY, "json", CHARSET, ALIPAY_PUBLIC_KEY, "RSA2");
+第1、4参数是固定的，第二个则是在支付宝申请的APP_ID、第三是生成的私匙，CHARSET支持GBK以及UTF-8编码 第5个表示阿里的公匙，最后一个表示签名算法类型。官方推荐使用RSA2
+所以我们需要填上的就是自己的APP_ID、APP_PRIVATE_KEY、ALIPAY_PUBLIC_KEY
+
+2、发起支付请求
+  2.1、根据不同支付方式创建的不同的请求对象，看上面。
+  创建请求完毕后，调用client的excute或者pageExcute方法
+  然后会返回相应的Response对象，调用Response的getBody方法得到返回字符串。
+  如果是扫码，则返回的是二维码的地址。电脑支付则会返回一个表单，直接将表单输出到response中
+  

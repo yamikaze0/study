@@ -1,0 +1,59 @@
+1 show variables like %log_bin%; //查看日志配置
+1.1 set @@global.log_bin = 1 | 0 (1 on 0 off) //开启or关闭二进制日志设置 or 修改配置文件log-bin = mysql-bin //将注释取消即可开启，但需要重新启动数据库,配置文件为电脑上的ini,
+                                                然后随便执行一条sql语句 打开mysql的data文件夹将会多出两个文件 ps 第一种方式需要5.6版本以上
+1.2 set @@global.binlog.size = 10240000//单位(bytes) //设置二进制日志的大小 如果在快达到最大大小时写入了一个较大的事务，那么二进制文件依旧会超出最大大小，否则将重新建立一个文件进行输出
+1.3 show binlog events in 'mysql-bin.000001' //查看二进制文件内容
+1.4 flush logs //默认情况下，当二进制文件大小满或者数据库重新启动后才会刷新二进制文件，可以使用这种方式手动刷新
+1.5 binlog-do-db=test1 //这样日志文件中只会有test1数据库的日志
+2 select @@global.tx_isolation; //查看全局隔离级别
+3 select @@tx_isolation         //查询当前会话隔离级别
+4 set session transaction isolatin level repeatable read; //设置当前会话隔离级别为可重复读
+5 set global transaction isolatin level repeatable read; //设置全局隔离级别为可重复读
+6 create table like tb_name; //快速创建一张与tb_name一样结构的表
+7 insert into tb_name select * from tb_name2; //快速复制tb_name2的数据到tb_name ps:两种表结构一致
+8 alter table tbname engine = innoDB;        //转换表的存储引擎，但会丢失原引擎的一些特性，建议使用6 8 7进行操作
+
+mysql "ON DUPLICATE KEY UPDATE" 语法
+如果在INSERT语句末尾指定了ON DUPLICATE KEY UPDATE，并且插入行后会导致在一个UNIQUE索引或PRIMARY KEY中出现重复值，则在出现重复值的行执行UPDATE；如果不会导致唯一值列重复的问题，则插入新行。 
+
+Mysql执行大部分修改表的操作都是先根据结构创建一个空表，然后从旧表中查询数据并插入新表中 然后删除新表，类似于上边中的6 8 7
+但并不是所有的修改表结构操作都会重建表，所有modify column的操作都会重建表 表的结构存放在.frm文件中，如果修改或者删除一行的默认值,可以直接修改frm文件而跳过重建表的步骤，但mysql还没有提供这种优化方式
+
+而表的定义放在的.frm文件中，修改该文件中行的定义不会重建表，而且速度非常快,这个文件是无法直接用文本文件打开的
+使用指令：
+alter table t_user alter column xxx set default ss ;//这种不会重建表
+但是如果增加删除一列是会触发创建表的，
+快速修改一张很大的表可以采用以下方式
+1、创建一张表 与要修改的表一致 create table t1 like t2
+2、修改t1的结构为想要的结构
+3、FLUSH TABLES WITH READ LOCKS 加锁 关闭在使用中的所有表，表禁止打开
+4、把表t2的frm文件与t1的frm文件交换
+5、UNLOCK TABLES就可以看到效果了
+ps：这种方式仅仅适用于修改行的默认值，enum常量等等，如果涉及到增加行 删除行则不行
+
+Mysql的索引：最优索引 >> 好索引 >> 一般索引 >> 没有索引 >> 坏索引
+
+Mysql使用索引为最左前缀，例如为username password sex 顺序创建了一个索引，相当于创建了username、username password，username password sex这几个索引
+Mysql实现索引是在存储引擎实现的，所以访问网站时会看到InnoDB引擎才支持索引之类的提示。
+当谈论索引时，如果没有特别的明示，就是指B-Tree索引，然而InnoDB使用B+Tree。
+查找条件会使用索引，如果order by 后面的列包含索引的列并能匹配 也会使用索引
+Hash索引，在Mysql中，只有memory引擎显示支持Hash索引。但InnoDB引擎在某些数据查找比较频繁时，会为这些频繁的数据创建一个Hash索引
+索引优点：
+1、大大减少了服务器需要扫描的数据量，就像从一本书找东西，是看目录快还是从头翻到尾快
+2、索引可以帮助服务器避免排序和临时表，因为索引是按照顺序存储，数据是有序的，所以也会将相同顺序的值放在一起存储
+3、索引可将随机IO变为顺序IO，如第二点。
+
+索引适用于：中型以及大型表，小表全局扫描所花的时间大于使用索引，相对多线程是否线程数越多就越快。
+创建索引的方式：
+1、创建表时创建 key(username,password(1))
+2、alter语句
+   alter table t_user add key(username(7))
+
+如何建立高性能的索引：
+1、索引的列不能是独立的列：即列不能是表达式的一部分
+select id from t_user where id + 1 > 5 这句sql就不会使用id的索引，因为id + 1不匹配索引id，改为select id from t_user where id > 5
+2、前缀索引。如果索引的列非常大，可以只对列的前几个或者前十几个字符做索引
+key(username(10)) 只对username的前10个字符做索引，但这回降低索引的选择性，索引的选择性是指 不重复的索引值 与 表中所有数据(记录总数)的比值，选择性越高查询的效率越高，成正比关系
+而对于BLOB、TEXT类型 必须使用前缀索引，因为Mysql不允许对这些类型进行全值索引
+如果前缀选择性接近0.031就可以了
+遗憾的是Mysql的order by与group by不支持前缀索引，有前缀索引，也有后缀索引，但Mysql原生不支持后缀索引

@@ -1,0 +1,16 @@
+Spring Boot对Spring MVC进行了自动配置。但与Spring MVC的配置略有不同。
+Spring Boot MVC的静态资源文件为resources下的static，而Spring MVC为自己指定。
+
+Spring Boot内置服务器：Tomcat
+支持服务器：JBoss Undertow、Apache Tomcat、Jetty
+具体配置类：org.springframework.boot.autoconfigure.web.ServerProperties
+这个类除了配置了服务器之外，还有Session等配置。
+
+侵入式与非侵入式区别：
+侵入式：开发者需要继承使用框架的一些类，例如Struts2，需要Action类继承ActionSupport以及实现Model。
+非侵入式：开发者不需要引入框架代码，从类的编写者角度看，感觉不到框架的存在。例如Spring的IOC。
+
+侵入式让用户代码产生对框架的依赖，脱离框架之后就不能正常使用。但侵入式可以使用户跟框架更好的结合。
+更充分利用框架的功能。
+
+非侵入式则没有过多的依赖，可以很方便的迁移到其他地方，但是与用户代码互动的方式比较复杂。

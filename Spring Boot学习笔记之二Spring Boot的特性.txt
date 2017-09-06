@@ -1,0 +1,66 @@
+启动Spring Boot的方式：
+	1、直接运行main方法。
+	2、执行maven指令：mvn spring-boot:run
+	3、java命令行方式
+Spring Boot的特性：
+	1、Spring Boot提供了一种从main方法中启动应用的便捷方式。在很多情况下，只需要委托给SpringApplication的run静态方法即可。
+	2、Spring Boot启动时默认输出info级别的日志到控制台。在日志前会输出一个字符图像(Spring)。如果想要改变这个字符图像，
+	可以在classpath中建立一个banner.txt或者banner.location设置相应的文件。
+	在banner.txt文件中可以使用${application.version} METAIFEST.MF声明的版本。
+							  ${application.formatted-version} METAIFEST.MF中声明被格式化后的版本。
+							  ${spring-boot.version} 当前Spring Boot的版本。
+							  ${Spring-boot.formatted-version} 
+	如果想以编程的方式实现自己的banner(旗帜)，可以使用SpringBootApplication的setBanner方法，使用Banner借口。
+	如果你不想输出banner，你可以采取以下方式：
+	SpringApplication sa = new SpringApplication(HelloController.class);
+	sa.setShowBanner(false);//设置不显示banner
+	sa.setBannerMode(Banner.Mode.OFF);//OFF 不显示 CONSOLE 控制台显示，LOG日志显示
+	sa.run(args);
+	3、SpringApplicationBuilder支持链式编程。与JQuery类似，每个方法都返回对自身的引用。
+	4、SpringApplication事件与监听器。
+	5、SpringApplication会自动识别当前是否是web环境。你也可以调用SpringApplication的setWebEnvironment设置是否为web环境。
+	   识别是否为web环境只需要确认某些类是否存在，例如servlet。
+	6、如果你想获取原始的命令行参数，你可以实现CommandLineRunner街口。会调用所有实现了该接口的run(String...args)方法 //好像不行
+	7、Spring Boot允许外化配置。配置文件可以使用properties文件，也可以使用yaml文件。在类中使用@Value注解，可以直接将属性注入到bean中
+	   在类中获取属性使用与EL表达式一样的形式。yaml文件是json的一个超集，也是一种方便的定义层次配置数据的格式。优先使用yml代替properties文件。
+	   属性优先级如下依次降低：
+		   ① java命令行参数
+		   ② 来自于java.comp/env的JNDI属性
+		   ③java系统属性(System.getProperties())
+		   ④操作系统环境变量
+		   ⑤只有在random.*里包含的舒心会产生一个RandomValuePropertySource
+		   ⑥打包jar外的应用程序配置文件。
+		   ⑦打包jar内的应用程序配置文件。
+		   ⑧在@Configuration类上的@PropertySource注解
+		   ⑨默认属性，使用SpringApplication.setDafaultProperties方法指定的属性。
+	    Spring Boot的配置文件：优先级依次降低。你可以使用yaml文件(后缀.yml)替代properties文件。
+		   ①当前目录下的一个/config子目录
+		   ②当前目录
+		   ③一个classpath下的/config包
+		   ④classpath路径。
+		如果要配置特定属性可以这样，application-{profile}.yml或者application-{profile}.properties
+	    如果在文件开头定义了熟悉感name=yamikaze，那你可以在文件后面使用类似于EL表达式的形式引用前面定义的值。
+		
+		YAML文件的加载由两个类来负责：YamlPropertiesFactoryBean和YamlMapPropertiesBean。
+		从名字可以看出，一个将yaml文件作为properties加载，另一个作为map来加载。
+		server：
+		      tomcat：
+			        max-threads：80
+			  port：80
+		会被解析为：
+		server.tomcat.max-threads = 80;
+		server.port = 80
+        但Yaml文件不能使用@PropertySource注解加载。如果要使用PropertySource加载，就要使用.properties文件。
+		profile文件需要开启才能使用，在application.yml文件中以spring.profiles.active = dev
+		                             即spring：
+									         profiles：
+											         active：dev #即spring-dev.yml文件。
+	8、 Spring Boot日志。
+	    Spring Boot内部日志系统使用的事Commons Logging，但开放底层的日志实现，默认会为Java Util Logging、Log4J、Log4J2、Logback提供配置。
+	    默认情况下会使用Logback记录日志。
+		Spring Boot默认日志输出格式(7部分组成)：
+		日期时间(精确到毫秒) 日志级别(INFO、LOG、DEBUG、ERROR、FATAL) 进程ID --- 线程ID(线程名) 日志名(输出日志的类简称) 日志信息。
+		默认情况下Spring Boot只将日志输出到控制台，如果想将日志输出到文件中，可以在application.yml中指定logging.file或者logging.path
+		这两个属性file大于path，即如果同时指定了file与path，则file生效。ps：file指定文件，path会在指定目录下自动生产spring.log文件。
+		还可以通过logging.level设置日志级别。TRACE、DEBUG、INFO、WARN、ERROR、OFF。
+		也可以自定义日志配置：采用Log4J还是采用Logback。同时要在文件中配置log.config来指定采用哪个配置。

@@ -1,0 +1,7 @@
+linux创建快照：
+创建一个16G名为yamikaze_backup的快照，为/home/yamikaze/backup创建
+lvcreate --size 16G --snapshot --name yamikaze_backup /home/yamikaze/backup
+
+删除快照：force表强制	
+lvremoce --force /home/yamikaze/yamikaze_backup
+恢复快照

@@ -1,0 +1,21 @@
+GC machine
+
+Serial : the oldest gc machine of young which is single thread. 标记整理 算法
+if it work that it will stop other thread(eg、user thread). means stop the world.
+
+ParNew: the multithreading of Serial. stop the world.
+
+Parallel Scavenge： 复制算法，young，Multithreaded。
+
+Serial Old：old 标记整理
+
+Parallel Old：old，Multithreaded。标记整理
+
+CMS：old 标记-清除
+
+G1：young old都可以使用
+
+使用只有Serial 与 ParNew 与CMS兼容
+
+新生代 young垃圾收集比较频繁，而老年代old频率较低
+

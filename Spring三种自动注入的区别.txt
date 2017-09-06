@@ -1,0 +1,10 @@
+Spring有三种注入方式：Resource、AutoWired、Inject。
+这三种方式有无setter方法都可以注入(可在变量上或者set方法上声明)。
+Inject：
+JSR303的规范，通过AutowiredAnnotationBeanPostProcessor类实现依赖注入，这种注入方式需要导入外部jar
+
+Autowired：
+Spring提供的注解，通过AutowireAnnotationBeanPostProcessor类实现依赖注入，可以与Inject互换。
+
+Resource：
+JSR250的规范，通过CommonAnnotationBeanPostProcessor类实现依赖注入。

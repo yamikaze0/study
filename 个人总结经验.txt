@@ -1,0 +1,14 @@
+1、代码遇到NoClassFoundException 或者 NoClassDefError。不要想肯定是你的jar少导了。
+2、代码遇到NoSuchMethodError 或者NoSuchFieldError。这一定是你jar的版本低了。
+   ps：为什么不是版本高了？正常来说，如果低版本的类或者变量开发者不建议使用，会将其声明为过时，而不是删除，而且会使用新方法来替代，
+       例如：Mybatis与Spring整合注入sqlSessionFactory，采用的方法是setSqlSessionFactoryBeanName 而不是setSqlSessionFactory(该方法已过时)
+
+3、开发Web项目时，无论怎么检查都报404错误，但后台代码不报错。这时候请检查下你的视图映射配置，尤其使用Spring Boot时要特别注意。
+   ps：因为Spring Boot包含了许多默认配置，可能你没有覆盖或者配置这些配置。
+
+4、数据库表设计：不要添加物理关联（外键），采用逻辑关联，使用代码控制，更加灵活。除非一些金融公司，可以使用物理关联。
+5、建好实体类，二话不说，先来一个无参构造函数，因为Spring MVC、Mybatis等都是使用无参构造函数构建对象。
+6、页面编码时，标签一定要闭合，标签一定要闭合，标签一定要闭合。
+7、如果发现界面样式不对。清空缓存再进行操作试试。再不行，请给你的css引入加上完整的ref以及type
+8、页面调试请不要使用alert，使用console代替
+9、sql语句表别名 一定不能与Mysql保留字相同

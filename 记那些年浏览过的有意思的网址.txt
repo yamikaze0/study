@@ -1,0 +1,27 @@
+https://blog.52itstyle.com/archives/1447/ 记一次WEB网站架构技术总结，开眼界的
+http://www.cnblogs.com/roverliang/p/5176456.html 简单认识TCP/IP协议
+http://jinnianshilongnian.iteye.com/ 张开涛博客，大牛 你可以在里面学习servlet3规范，Spring、 Spring MVC、 Shiro、以及一些架构，非常值得推荐
+http://www.csdn.net/ csdn首页，无聊时可以点进去看看
+https://my.oschina.net/u/3644566/blog/1527893 java面向对象部分陷阱
+http://geek.csdn.net/news/detail/235057 Spring Boot怎么友好提示错误
+http://www.cnblogs.com/zuoxiaolong/p/jvm2.html Java obj=null
+http://www.cnblogs.com/zuoxiaolong/p/con1.html 高并发带来的问题之一，未说到原因，但暴露了问题
+https://yq.aliyun.com/articles/161190?utm_content=m_27692 淘宝架构演变之路，开眼界的
+http://ityouknow.blog.51cto.com/8715198/1955325 电脑是怎么解析dns的，耐心看
+http://geek.csdn.net/news/detail/233416 java处理异常的实践 or 阅读effctive Java的异常处理部分
+http://geek.csdn.net/news/detail/233640 开发者必读的10大书籍 其实有些没必要读
+http://www.techug.com/post/30-programmer-meet-problems.html 程序员的xxx问题，看着玩可以
+http://www.cnblogs.com/whitewolf/p/4686154.html 开眼
+http://blog.csdn.net/catoop/article/details/7445870 看着玩
+http://blog.csdn.net/catoop/article/details/7488385 看着玩
+http://blog.csdn.net/mindfloating/article/details/70199199 如果两个程序员水平一样，选写作好的那个
+http://blog.csdn.net/zuoxiaolong8810/article/details/11517943 10个常用的重构小技巧
+http://blog.csdn.net/zuoxiaolong8810/article/details/71076117 程序员你们这样下去没有朋友的 人生
+http://blog.csdn.net/zuoxiaolong8810/article/details/11563783 勤快的程序员是没有前途的     人生
+http://blog.csdn.net/zjrbiancheng/article/details/6253232 浅析DTO DAO VO等的区别，适合初学者
+http://blog.csdn.net/jack_wong2010/article/details/7855738 程序员的10个级别，看看就好，明白自己的渺小
+https://mp.weixin.qq.com/s?__biz=MzIwMzg1ODcwMw==&mid=2247486666&idx=1&sn=e5038ef1027c28db3aab3d7ce8bf0471&chksm=96c9baaaa1be33bc34f67e75ea11d685015486c84c0c0c678fc457498455b2ac7707107494b7#rd 如何成为一个优秀的工程师，非常nice的文章
+http://geek.csdn.net/news/detail/235232 并发编程的5个技巧，两点有用
+http://blog.csdn.net/wemedia/details.html?id=40867 程序员鄙视链
+http://blog.csdn.net/wemedia/details.html?id=42127 程序员高逼格指南，不是该网站小编原创，看着玩玩
+http://blog.csdn.net/wemedia/details.html?id=41325 六代单传老代码 能不能动

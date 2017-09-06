@@ -1,0 +1,57 @@
+Spring Boot:Boot意为引导之意，可以帮助开发者快速搭建Spring的开发环境。它是在Spring4.0之后的一个分支。一个入门级微框架。
+Spring Boot的目标：
+    1、为所有Spring项目的开发提供快速的搭建环境。
+	2、帮助开发者快速启动一个Web容器。
+	3、简化了使用Spring的过程。
+	
+Spring Boot的优势：
+    1、Spring Boot使编码变得简单。//Spring也一样简单，只能说Spring Boot继承了Spring的编码风格。
+	2、Spring Boot使配置变得简单。//在原来开发中，使用SSM框架，需要有Spring、Spring MVC、Mybatis、web.xml配置文件，
+								  //且需要进行大量配置。使用Spring Boot配置只需要有一个文件，且配置很少。
+	3、Spring Boot使项目部署变得简单。 //一个web项目部署，需要服务器。Spring Boot内置了服务器，默认Tomcat。可以替换为Jetty。
+	4、Spring Boot使监控变简单。//这点还没体会到。
+
+Spring Boot系统需求：
+    Spring Boot 1.5.4版本需要JDK7和Spring4.3.9或以上。但在某些情况下可以使用JDK6。
+
+Spring Boot支持内嵌服务器：
+    Tomcat8、Tomcat7、Jetty9.3、Jetty9.2、Jetty8、Undertow1.3。
+	Spring Boot默认内嵌服务器为Tomcat。
+
+Spring Boot的安装：
+	1、JDK确保在1.7及以上，虽然Spring Boot能兼容JDK6，但尽可能使用最新的JDK版本。
+	2、下载Spring Boot的jar包。可以使用Maven，也可以使用其他。
+
+开发第一个Spring Boot应用：
+	1、创建Maven项目，并在Maven的POM文件中加入以下配置。
+	<parent><!--可以不用声明模块-->
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.5.4.RELEASE</version><!--Spring Boot的版本-->
+    </parent>
+	2、加入相关依赖。一个简单web项目的依赖。
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+	</dependencies>
+	3、编写控制器(servlet)并启动程序
+	
+	@RestController //告诉Spring直接将字符串返回给调用者。
+	@EnableAutoConfiguration
+	public class HelloController {
+		
+		@RequestMapping("/hello")
+		public String hello() {
+			return "Hello Spring Boot!";
+		}
+		
+		public static void main(String[] args) {
+			SpringApplication.run(HelloController.class,args);
+		}
+	}
+	
+	4、打开浏览器输入http://localhost:8080/hello访问结果显示 Hello Spring Boot!
+
+使用@SpringBootApplication默认属性使用@ComponentScan、@Configuration、EnableAutoConfiguration。

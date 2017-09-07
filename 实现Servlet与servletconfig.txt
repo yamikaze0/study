@@ -1,0 +1,61 @@
+实现Servlet有三种方式
+
+1.实现javax.servlet.Servlet接口
+2.实现javax.servlet.GenericServlet接口
+3.实现HttpServlet抽象类(推荐使用这种方式) ---------> HttpServlet是一个特殊的抽象类，是一个没有抽象方法的抽象类
+
+Servlet类是由我们书写，但是Servlet对象的创建、方法的调用都是由服务器来完成
+
+Servlet的init()方法只会调用一次。服务器调用时发现这个servlet没有，就会创建servlet对象，然后调用init()方法。第二次
+访问servlet时就不会再创建。servlet的service方法每次访问时都会调用一次。destory()方法会在servlet对象销毁时调用。
+通常是服务器关闭时销毁servlet
+
+每个servlet至少与一个URL绑定在一起 即在web.xml中配置servlet。
+配置分为两部分，一部分为Servlet 另一部分servlet-mapping(配置URL) 可以配置多个url-pattern
+
+serlvet只有初次访问时才会创建，如果要想servlet在服务器启动时创建，可以在配置中加上
+  <load-on-startup>1</load-on-startup>
+只要是非0和不是空就会在服务器启动时创建。如果有多个servlet配置了此项，则启动顺序就是中间的数字顺序。
+
+
+servletConfig对应servlet的配置信息，
+
+ <servlet>
+    <servlet-name>AServlet</servlet-name>
+    <servlet-class>cn.servlet.AServlet</servlet-class>
+    <init-param>
+    	<param-name>p1</param-name>
+    	<param-value>v1</param-value>
+    </init-param>
+    <init-param>
+    	<param-name>p2</param-name>
+    	<param-value>v2</param-value>
+    </init-param>
+  </servlet>
+
+String getServletName()   ----->  返回servlet-name的名字
+ServletContext getServletContext() ---> 返回 ServletContext对象
+String getInitParameter(String name) ------> 获取指定名字的参数  ----> p1 = v1
+Enum getInitParameterNames() ------> 获取所有初始参数的名字的集合  ------>得到上述的p1,p2
+
+
+ServletContext 是只有一个实例的对象，在服务器启动时创建，在服务器关闭时销毁
+三大域对象之一
+1.域功能，内部有Map，可以使用setAttribute(String,Object)来存数据,可以使用getAttribute(String)来获取数据
+					 还可以使用removeAttribute(String) 移除对应属性。还可以getAttributeNames()获取所有属性名称
+	而且保存在ServletContext中的数据可以供当前程序中任意动态资源共享
+2.访问当前web应用的资源
+ getRealPath(String) 获取指定资源的真实路径
+ 
+ getResourceAsStream(String) 把当前web应用下的资源包装成一个Stream
+ getResourcesAsPaths(String) 获取指定路径的所有的资源路径
+ 
+3.获取web.xml下的配置参数
+ getInitParameter(String) 获取参数
+ 
+4.获取ServletContext对象
+ a) ServletConfig.getServletContext()获取ServletContext对象
+ b) this.getServletCOntext() 因为GenericServlet本身就有这个方法，而HttpServlet又实现了这个类
+
+
+ 

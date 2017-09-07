@@ -1,0 +1,26 @@
+	/**
+	 * 0、判断当前系统是否支持系统托盘
+	 * 1、获取图片路径
+	 * 2.将路径转换为ImageIcon对象
+	 * 3、创建弹出式菜单(如果没有可以不用创建) 这儿创建菜单要使用PopupMenu创建
+	 * 4、获取系统托盘图像对象
+	 * 5、获取系统托盘对象，然后添加系统托盘图像
+	 */
+	// 0、判断当前系统是否支持系统托盘
+	if(SystemTray.isSupported()) {
+	    
+	    //1、获取图片路径
+	    URL url = this.getClass().getResource("1.jpg");
+	    
+	    //2.将路径转换为ImageIcon对象
+	    ImageIcon icon = new ImageIcon(url);
+	    
+	    //3、创建弹出式菜单(如果没有可以不用创建)
+	    
+	    //4、获取系统托盘图像对象
+	    TrayIcon ti = new TrayIcon(icon.getImage());
+	    
+	    //5、获取系统托盘对象，然后添加系统托盘图像
+	    SystemTray st = SystemTray.getSystemTray();
+	    st.add(ti);
+	}

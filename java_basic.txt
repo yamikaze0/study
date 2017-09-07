@@ -1,0 +1,25 @@
+Q：什么是java语言？
+A:java语言是一种通过解释方式来执行的语言，最初名字为OAK，95年重命名为java
+
+Q：java语言具有哪有特性？
+A:1.语法比c++语言简单。对c++语言进行了简化和提高，还提供了丰富的类库和API文档以及第三方开发包
+  2.是一种纯面向对象的语言（当然没有做到完全的纯对象）
+  3.分布性 (全球大概有几十亿的设备在运行java程序)
+  4.可移植性 (一次编译，到处运行)
+  5.可解释性
+  6.健壮性
+  7.多线程 (支持多线程)
+  8.高性能(这点值得怀疑，速度没有c、c++快)
+  9.动态
+  10.安全性(主要体现在内存回收机制上)
+
+ Q:学习java语言需要做哪些准备？
+ A：安装JDK，然后在系统变量中配置JAVA_HOME、CLASSPATH以及Path中配置bin
+ 	JAVA_HOME即jdk安装目录，CLASSPATH为jdk目录下lib目录中的两个jar
+ 	%JAVA_HOME%/lib/dt.jar;%JAVA_HOME%/lib/tools.jar
+ 	Path中为%JAVA_HOME%/bin;然后在控制台输入javac查看JDK是否安装成功
+
+ Q:怎样运行java程序？
+ A:先将java文件编译为class文件(使用javac指令)，在执行class文件(使用java指令)
+ 
+ //第一个java程序参考cn.yamikaze.java.basic.HelloJava.java

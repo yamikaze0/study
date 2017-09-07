@@ -1,0 +1,63 @@
+JSP 
+JAVA SERVER PAGES包含有9个内置对象
+除去HttpServletRequest和HttpServletResponse
+还有
+out ------> JSPWriter
+application  ------> ServletContext
+session ------> HttpSession
+pageContext ------> PageContext ------>四大域对象之一。能获取其他8个对象，一个顶9个。
+	此外还有一个全域查找findAttribute(String)方法，会依次在pageContext-->request-->session-->application中查找，找到就返回，否则为null
+config --------> ServletConfig
+page -----> Object 代表当前页面
+exception -----> Throwable 异常，只有page标签中isErrorPage="true"时才能使用这个对象
+
+
+<% 
+	java code
+%>
+
+<%= java String %>
+
+<%! difinition java Function or Fields %>
+
+<%-- java 注释 --%> 雪の華
+
+JSP其实就是一个Servlet
+JSP在访问时会先被Tomcat编译成.java文件，再编译成.class文件，再编译成.html再响应给客户
+
+JSP三大指令
+JSP中没有必须的指令
+Page include taglib
+
+*****************************
+page常用属性
+Language 只能是java，默认是java
+import java代码中的导包
+pageEncoding 当前页面采用的什么编码
+errorpage  当前页面发生错误时转向哪个页面
+isErrorPage 当前页面是否是执行错误的页面
+info 返回页面的简单性描述
+contentType 一般跟pageEncoding一致
+session 是否支持session 如果为false就不能使用session对象
+isELIgnored是否忽略EL表达式此外还有extends、isThreadSafe、buffer、authFlush等不常见属性
+此外也可以在web.xml中完成这些配置
+
+*****************************
+include合并文件指令
+合并文件是静态合并，即文件会先被编译成java文件再合并。不推荐使用这种方式推荐使用jsp动作指令
+且属性file就只能是常量
+
+*****************************
+taglib指令，导入标签库时使用
+
+
+
+
+==================================
+jsp内置标签，无需导入就可使用
+
+<jsp:include/> 动态包含 请求包含一致
+<jsp:forword/> 在servlet中与请求转发一致。这个标签专门放在JSP页面使用。
+	在转发之前的内容不会显示，在转发之后的内容不会执行
+<jsp:param/>
+	是前两个标签的子标签，向包含和转发传递参数的标签

@@ -1,0 +1,24 @@
+java使用引用来操纵对象
+String s = "abc";
+此时s并不是一个对象，"abc"才是一个对象，而s是这个对象的引用，指向对象在内存中的位置
+Student s = new Student();
+与上述相同，只有new才会产生一个对象，Student s只会产生一个引用，但这个引用不一定要指向一个对象。
+对象会存储到什么地方：
+1、寄存器
+2、栈(RAM)，java内存划分的虚拟机栈，对象只存引用，基本类型int存放数值(线程私有)
+3、堆(RAM)，java内存划分的堆，堆分新生代和老年代，new的对象一般存于新生代(线程共享)
+4、方法区，这方面存储常量(线程共享)
+5、非RAM存储 一般为流或者持久化对象(数据库)或者文件
+
+java八大基本类型，不是对象
+名     占内存字节数  默认值   包装类型(对象)
+byte     1           (byte)0    Byte
+short    2           (short)0   Short
+int      4            0         Integer
+long     8            0L        Long
+float    4            0.0f      Float
+double   8            0.0d      Double
+char     2      '\u0000'(null)  Character
+boolean  未确定       false     Boolean
+
+

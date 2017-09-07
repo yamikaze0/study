@@ -1,0 +1,67 @@
+jps可以查询到虚拟机进程的LVMID
+参数
+   -q 只显示LVMID
+   -m 显示传递给主类的参数
+   -v 虚拟机启动时JVM参数
+   -l 输出主类的全名，如果进程执行的是jar包 则显示jar路径
+   
+jinfo：java配置信息工具
+jinfo [options] pid(这儿的pid是jps查出的JVMID) 指定不存在的JVMID会报错。
+-sysprops 输出所有系统配置
+-flag name 输出name的值
+
+jstat：jvm统计信息监视工具
+命令格式：jstat [option] VMID [interval]ms/s count
+                         如果是本地进程则VMID为JVMID 如果是远程虚拟机进程 则格式如下：
+						 [prorocol:]// LVMID [@hostname:post]/servername
+
+参数：
+    -gcold 监视老年代GC状况
+	-gcnew 监视新生代GC状况
+	-class 监视类装载、卸载数量、总空间
+	-gc    监视java堆状况，包括新生代、老年代
+	-gccause 显示上一次触发GC的原因
+	-gcutil 与-gc基本一致，但只显示已使用空间占总空间的百分比
+	-compiler 输出JIT编译器编译过的方法，耗时等信息
+	-gcnewcapacity 显示新生区使用的最大、最小空间
+	-gcoldcapacity
+	-gccapacity
+	
+	S0 第一个survivor区
+	S1 第二个survivor区
+	E  Eden区
+	O  老年区
+	P  永久代
+	YGC 年轻代发生垃圾收集的次数
+	TGCT 年轻代发生垃圾收集的时间
+	FGC 老年代发生垃圾收集的次数
+	FGCT
+	GCT所有GC收集的时间
+	S0C 第一个survicor区的总容量
+	S0U 第一个survivor区的使用量
+
+jmap:java内存映射工具
+ -dump 生成java堆存储快照，格式为：-dump:[live,] format=b file=<filename>
+ -finalizerinfo 显示等待执行finalize方法的对象，只在linux以及solaris下有效
+ -heap 显示java堆详细信息 如使用哪种回收器，参数，分代状况，linux及Solaris下有效
+ -histo 显示堆中对象统计信息，包装类，实例数量，合计数量等
+ -permstat 以ClassLoader为入口统计显示永久代内存状态，在linux以及solaris下有效
+ -F 当-dump生成快照时没有响应，可以使用这个参数强制生产快照，只在linux以及solaris下适用
+ 
+ jmap -dump：format=b，file=eclipse.bin 2288 会生成一个文件可以使用jhat指令来分析
+ 
+ 
+jhat：虚拟机堆转储快照分析工具(内置了一个HTTP/HTML的服务器) 解析完成后再7000端口查看结果
+解析jmap得到的快照文件，但一般不适用这个命令来分析
+原因：1、功能简陋
+      2、耗时且消耗硬件资源
+
+jstack：java堆栈跟踪工具 用于生成虚拟机当前时刻的线程快照。
+-F 当正常输出的请求不被响应时，强制输出线程堆栈
+-l 除堆栈外 显示锁的附加信息
+-m 如果调用到本地方法的话，可以显示c/c++的堆栈
+
+javap 指令 反编译class文件
+javap 类文件 得到主要类声明以及类方法
+	
+	

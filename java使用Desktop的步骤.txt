@@ -1,0 +1,25 @@
+使用Desktop分为如下几个步骤
+1.判断系统是否支持Desktop
+2.如果支持，获取desktop的实例
+3.使用实例的browse(uri)方法，打开文件或者网址
+
+部分代码如下
+
+try {
+	    if(Desktop.isDesktopSupported()) {
+	        //与使用系统托盘一样，在使用代码打开桌面应用之前，需要判断当前系统是否支持
+	        
+	        //获取Desktop的实例  获取实例方法与Runtime Toolkit，SystemTray一致
+	       Desktop dt = Desktop.getDesktop();
+	    
+	       //browse(uri)方法会使用系统默认的浏览器打开网页
+	       //如果是打开网站一定要加上http协议名，否则会在本地计算机上寻找名字=uri的文件，并尝试用浏览器打开
+	       dt.browse(new URI("http://cartoon.tudou.com"));
+	    }
+	} catch (IOException e) {
+	    e.printStackTrace();
+	} catch (URISyntaxException e) {
+	    e.printStackTrace();
+	}
+
+具体程序参考cn.yamikaze.java.gui.OpenApplicationUseJava

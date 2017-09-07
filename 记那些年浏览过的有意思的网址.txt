@@ -28,3 +28,4 @@ http://blog.csdn.net/wemedia/details.html?id=41325 六代单传老代码 能不�
 http://www.csdn.net/article/a/2010-03-31/217683    开源界5大协议 必看
 http://www.igeekbar.com/igeekbar/post/340.htm      如果编程语言是女人，你会选择哪个？
 http://geek.csdn.net/news/detail/235508            35个编程小技巧(性能优化)，很实用
+http://geek.csdn.net/news/detail/235635            java动态代理机制详解，没讲全，也没讲到点上，但可以一看

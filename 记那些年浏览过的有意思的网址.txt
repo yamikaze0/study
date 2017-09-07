@@ -24,6 +24,7 @@ https://mp.weixin.qq.com/s?__biz=MzIwMzg1ODcwMw==&mid=2247486666&idx=1&sn=e5038e
 http://geek.csdn.net/news/detail/235232 并发编程的5个技巧，两点有用
 http://blog.csdn.net/wemedia/details.html?id=40867 程序员鄙视链
 http://blog.csdn.net/wemedia/details.html?id=42127 程序员高逼格指南，不是该网站小编原创，看着玩玩
-http://blog.csdn.net/wemedia/details.html?id=41325 六代单传老代码 能不能动
+http://blog.csdn.net/wemedia/details.html?id=41325 六代单传老代码 能不能动？
 http://www.csdn.net/article/a/2010-03-31/217683    开源界5大协议 必看
-
+http://www.igeekbar.com/igeekbar/post/340.htm      如果编程语言是女人，你会选择哪个？
+http://geek.csdn.net/news/detail/235508            35个编程小技巧(性能优化)，很实用

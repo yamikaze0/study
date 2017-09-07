@@ -90,6 +90,6 @@ JRE: Java Runtime-Envirment 是 java运行环境，是java应用运行不可缺少的环境
 JDK: Java Devolepment Kit是 java工具开发包，包括java编译器，也包括JRE
 JVM: Java Virtual Machine 是java虚拟机，编译执行java字节码的机器，也可以执行其他的语言
 JIT: Just In Time Compilation 即时编译。当代码执行超过一定的次数时，会将java代码存储为本地代码，可以提高效率。			  
-
+SNS: 社交网站（Social Network Site）；社交网络服务（Social Networking Services）
 
 

@@ -7,7 +7,7 @@ System.out.println(in1 == in2);//false 虽然值相同 但是对象引用的地址不同
 Integer i1 = 111;
 Integer i2 = 111;
 System.out.println(i1 == i2); //true 
-Integer的值如果在 -127到128之间，使用==就可以比较(不包含128，即128时为false，下线是-128，包含了-128)
+Integer的值如果在 -127到128之间，使用==就可以比较(不包含128，即128时为false，下线是-128，包含了-128) 实际上是-128 到 127 这点可以从Integer的内部静态类IntegerCache中得出
 如果Integer的值超出了这个范围 ==比较就是比较两个Integer对象
 这是因为Java -127-128是从缓冲区取得，所以可以直接用==比较，但是超出了这个范围就是new的
 

@@ -91,5 +91,9 @@ JDK: Java Devolepment Kit是 java工具开发包，包括java编译器，也包括JRE
 JVM: Java Virtual Machine 是java虚拟机，编译执行java字节码的机器，也可以执行其他的语言
 JIT: Just In Time Compilation 即时编译。当代码执行超过一定的次数时，会将java代码存储为本地代码，可以提高效率。			  
 SNS: 社交网站（Social Network Site）；社交网络服务（Social Networking Services）
-
-
+RPC: Remote Procedure  Call Protocol    远程过程调用协议
+XSS:跨站脚本攻击(Cross Site Scripting)，为不和层叠样式表(Cascading Style Sheets, CSS)的缩写混淆，故将跨站脚本攻击缩写为XSS。恶意攻击者往Web页面里插入恶意Script代码，当用户浏览该页之时，嵌入其中Web里面的Script代码会被执行，从而达到恶意攻击用户的目的。
+TIOBE排行榜是根据互联网上有经验的程序员、课程和第三方厂商的数量，并使用搜索引擎（如Google、Bing、Yahoo!）以及Wikipedia、Amazon、YouTube统计出排名数据，只是反映某个编程语言的热门程度，并不能说明一门编程语言好不好，或者一门语言所编写的代码数量多少。
+     每月更新一次
+JSR：Java Specification Requests java规范提案
+ISP：Internet Service Provider 因特网服务提供者，例如中国电信，移动，联通

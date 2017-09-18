@@ -31,3 +31,4 @@ http://geek.csdn.net/news/detail/235508            35个编程小技巧(性能�
 http://geek.csdn.net/news/detail/235635            java动态代理机制详解，没讲全，也没讲到点上，但可以一看
 http://geek.csdn.net/news/detail/235700            2017 9月最热门语言排行
 http://geek.csdn.net/news/detail/236360            开发与运营相爱相杀漫画
+http://igeekbar.com/igeekbar/post/418.htm          想成为牛逼程序员？先数数编程语言之父的头发

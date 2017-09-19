@@ -97,3 +97,15 @@ OOM错误处理：-XX:OnOutOfMemoryError=F:\a.bat
 查看GC与应用程序相互执行的耗时：—XX:+PrintGCApplicationStopTime -XX:+PrintApplicationConcurrentTime
 
 将日志打印到文件中；-Xloggc:C:\a.log
+
+=========================================优化======================================================================================
+
+禁用代码显示调用GC：-XX:+DisableExplicitGC
+
+为了加快启动速度，如果加载的类是可信任的，可以使用参数-Xverify:none跳过class的验证与校检
+为了加快Monitor GC的速度：新生代使用并行收集器:-XX:+UseParallelGC
+
+
+
+浅堆：指对象结构占用内存大小，比如String对象 浅堆大小 三个int + byte[] = 3 * 4 + 4 + 8(对象头) = 24.无论字符串多大，它的浅堆大小始终是24
+深堆：指对象被GC回收后释放的内存。包括仅仅该对象持有的对象占用的内存。

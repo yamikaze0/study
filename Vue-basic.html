@@ -27,7 +27,7 @@
 	<p v-for="site in sites">
 		{{site.name}}
 	</p>
-	<input type="hidden"  id="sd" v-model="src.number"/>
+	<input type="hidden"  id="sd" v-model="src.number" @keyup="console.log(vm.src.number)"/>
 </div>
 	
 <script>

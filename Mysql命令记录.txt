@@ -13,6 +13,7 @@
 7 insert into tb_name select * from tb_name2; //快速复制tb_name2的数据到tb_name ps:两种表结构一致
 8 alter table tbname engine = innoDB;        //转换表的存储引擎，但会丢失原引擎的一些特性，建议使用6 8 7进行操作
 9 explain sql 可以查看sql的类型，会影响多少行等等信息
+
 mysql "ON DUPLICATE KEY UPDATE" 语法
 如果在INSERT语句末尾指定了ON DUPLICATE KEY UPDATE，并且插入行后会导致在一个UNIQUE索引或PRIMARY KEY中出现重复值，则在出现重复值的行执行UPDATE；如果不会导致唯一值列重复的问题，则插入新行。 
 

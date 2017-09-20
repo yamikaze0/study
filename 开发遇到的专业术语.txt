@@ -68,28 +68,4 @@ OOP:Object-Oriented Programming 面向对象程序设计
 
 SPA：Singleton Page Application 单页应用：所有跳转全部在一个页面
 
-CAS : CompareAndSwap...  eg\CompareAndSwapInt
-	  java.util.concurrent.atomic包中的原子类(13个原子类，并不是不可变的)的操作
-	  使用的是Unsafe类的三个CAS操作来实现原子操作的（只提供了这三个方法）
-	  CompareAndSwapInt CompareAndSwapLong CompareAndSwapObject
-	  AtomicBoolean 的操作则是将boolean转换为整型再来进行操作。
-
-BSD开源协议：Berkeley Software Distribution缩写，意为伯克利软件发行版。开源5大协议之一
-		BSD开源协议是一个给于使用者很大自由的协议。可以自由的使用，修改源代码，也可以将修改后的代码作为开源或者专有软件再发布。
-		当你发布使用了BSD协议的代码，或者以BSD协议代码为基础做二次开发自己的产品时，需要满足三个条件：
-		1、如果再发布的产品中包含源代码，则在源代码中必须带有原来代码中的BSD协议。
-		2、如果再发布的只是二进制类库/软件，则需要在类库/软件的文档和版权声明中包含原来代码中的BSD协议。
-		3、不可以用开源代码的作者/机构名字和原来产品的名字做市场推广。
-		BSD代码鼓励代码共享，但需要尊重代码作者的著作权。BSD由于允许使用者修改和重新发布代码，也允许使用或在BSD代码上开发商业软件发布和销 售，因此是对商业集成很友好的协议。
-		很多的公司企业在选用开源产品的时候都首选BSD协议，因为可以完全控制这些第三方的代码，在必要的时候可以修改或者 二次开发。
-
-其他开源协议：GPL开源协议，该协议的开源不能用作商用，例如Linux遵循该协议，所以可以免费使用任何版本的Linux和在Linux上运行的软件。
-			  LGPL开源协议、AL2:Apache License 2.0开源协议，MIT协议等
-
-JRE: Java Runtime-Envirment 是 java运行环境，是java应用运行不可缺少的环境
-JDK: Java Devolepment Kit是 java工具开发包，包括java编译器，也包括JRE
-JVM: Java Virtual Machine 是java虚拟机，编译执行java字节码的机器，也可以执行其他的语言
-JIT: Just In Time Compilation 即时编译。当代码执行超过一定的次数时，会将java代码存储为本地代码，可以提高效率。			  
-SNS: 社交网站（Social Network Site）；社交网络服务（Social Networking Services）
-
 

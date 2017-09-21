@@ -98,3 +98,8 @@ TIOBEÅÅĞĞ°ñÊÇ¸ù¾İ»¥ÁªÍøÉÏÓĞ¾­ÑéµÄ³ÌĞòÔ±¡¢¿Î³ÌºÍµÚÈı·½³§ÉÌµÄÊıÁ¿£¬²¢Ê¹ÓÃËÑË÷ÒıÇæ£
 JSR£ºJava Specification Requests java¹æ·¶Ìá°¸
 ISP£ºInternet Service Provider ÒòÌØÍø·şÎñÌá¹©Õß£¬ÀıÈçÖĞ¹úµçĞÅ£¬ÒÆ¶¯£¬ÁªÍ¨
 
+NPE: NullPointerException¼ò³Æ
+OOM: OutOfMemoryError¼ò³Æ
+GC:  Garbage Collection À¬»ø»ØÊÕ
+
+

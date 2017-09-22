@@ -32,3 +32,11 @@ http://geek.csdn.net/news/detail/235635            java动态代理机制详解�
 http://geek.csdn.net/news/detail/235700            2017 9月最热门语言排行
 http://geek.csdn.net/news/detail/236360            开发与运营相爱相杀漫画
 http://igeekbar.com/igeekbar/post/418.htm          想成为牛逼程序员？先数数编程语言之父的头发
+http://mp.weixin.qq.com/s/U_nB_IL_5-O8aMUwgoqXAg   程序员暴漫合集
+http://mp.weixin.qq.com/s/8iL_QkGsKGG0K9n4lq5NOg   最强注释，总有一个笑哭你
+http://igeekbar.com/igeekbar/post/437.htm          FaceBook在代码里下毒，百度深受其害
+https://baijia.baidu.com/s?id=1579067993889800026&wfr=pc&fr=ch_lst&utm_source=tuicool&utm_medium=referral  那些你没看过的用户协议，特别是文章最后一段话 很赞。
+http://blog.csdn.net/gitchat/article/details/78021539 字符编码的前世今生
+https://mp.weixin.qq.com/s/dciNOrFa11ILxWn6Nah3bw     CoucurrentHashMap总结上
+https://mp.weixin.qq.com/s/z2zpodZo8hTU5iH0spvbeA     中
+https://mp.weixin.qq.com/s/ZEuy-9Na161fWAFctAyWDw     下

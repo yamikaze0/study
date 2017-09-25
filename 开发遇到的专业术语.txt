@@ -101,5 +101,8 @@ ISP：Internet Service Provider 因特网服务提供者，例如中国电信，移动，联通
 NPE: NullPointerException简称
 OOM: OutOfMemoryError简称
 GC:  Garbage Collection 垃圾回收
+NaN：Not a Number
+
+QRcode：Quick Response code 快速响应矩阵码(二维码)
 
 

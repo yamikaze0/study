@@ -40,3 +40,6 @@ http://blog.csdn.net/gitchat/article/details/78021539 字符编码的前世今�
 https://mp.weixin.qq.com/s/dciNOrFa11ILxWn6Nah3bw     CoucurrentHashMap总结上
 https://mp.weixin.qq.com/s/z2zpodZo8hTU5iH0spvbeA     中
 https://mp.weixin.qq.com/s/ZEuy-9Na161fWAFctAyWDw     下
+http://geek.csdn.net/news/detail/238939                为什么SQL正在击败Nosql....
+http://mp.weixin.qq.com/s/_CsnwcrWzjJMlBUqZkXBug      如果老婆是个程序员
+http://blog.csdn.net/csdnnews/article/details/78199626 最流行的IDE之争，我就服用排名第四编程的

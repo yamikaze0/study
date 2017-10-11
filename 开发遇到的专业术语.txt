@@ -105,4 +105,8 @@ NaN：Not a Number
 
 QRcode：Quick Response code 快速响应矩阵码(二维码)
 
+C10K: Connection 10K/S Ngnix(Ngine X)解决了一秒之内客户端的连接数目10K的问题。
+
+LOC: Line Of Code 代码行数
+
 

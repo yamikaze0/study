@@ -124,4 +124,6 @@ I/O: I/O可分为磁盘IO和网卡IO。
 
 流量: 性能测试中，一般指单位时间内流经网卡的总流量。分为inbound和outbound，一般以KB为单位。
 
+SOP: Same Origin Prolicy 同源策略，浏览器为了防止受到Xss、CSFR攻击，对ajax以及fetch请求会限制发起请求(域名、端口、协议只有有一个不同)，但img等不会。
+
 

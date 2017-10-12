@@ -1,0 +1,111 @@
+#全局配置
+#配置前有#代表默认就是这个配置 配置的注释之后有?表示我对这个属性有疑问。
+
+#user nobody nobody; #配置用户与组
+
+#daemon on; #后台进程
+#master_process on; #是否开启主从工作模式，如果为off，则主线程不会fork出工作线程处理请求，而是主线程自身来处理。 
+#在生产环境中永远不要使用daemon和master_process,
+
+#一个nginx进程打开的最多文件描述符数目，理论值应该是最多打开文件数（系统的值ulimit -n）与nginx进程数相除，但是nginx分配请求并不均匀，所以建议与ulimit -n的值保持一致。
+worker_rlimit_nofile 65535;
+
+pid /ngnix/pid/ngnix.pid; #ngnix master进程pid存放路径，默认为logs/ngnix.pid
+
+#worker_process 1; #ngnix将会启动多少个工作进程，数量一般与cpu数一致，每行配置末尾都要加上;号
+
+#error_log logs/error.log debug; #日志存放文件 debug为日志级别;
+
+events { #事件驱动模型配置
+
+	#accept_mutex on; #防止惊群现象，相当于打开互斥锁。最先抢到互斥锁的worker进程处理请求。
+	
+	#accept_mutex_delay 500ms; #如果上面的accept_mutext 为off， 那么惊群现象中没有处理请求的进程将延迟多少时间，类似于java的lock对象的tryLock ?
+	
+	#multi_accept off; #同一个连接是否可以多次被接收(accept()) ?
+	
+	worker_connections 1024;#最大连接数 默认为512, 正向代理时max_clients = worker_process * worker_connections,作为反向代理时则是max_clients / 4 ?
+	
+	#use epoll; #事件驱动模型设置 select|poll|kqueue|epoll|/dev/poll|eventport, 各个模型区别参考ngnix事件驱动模型设置.txt
+	
+	#devpoll_changes ; #?
+	
+	debug_connection 127.0.0.1; #调试127.0.0.1的连接，只有使用--with--debug参数编译的ngnix有效
+}
+
+http{ #http的配置
+    
+	#http的全局配置
+	include mime.types; #文件扩展名文件存放位置
+	default_type application/octet-stream; #默认文件类型为text/plain
+	log_format myFormat '$remote_addr–$remote_user [$time_local] $request $status $body_bytes_sent;#自定义日志格式
+	access_log log/access_log.log myFormat; #将访问日志放置与access_log.log文件中。指定格式为自定义格式，默认格式为combined
+	sendfile on; #允许sendfile方式传输文件，默认为off，可以在http块、server块、location块中
+	#sendfile指令指定nginx是否调用sendfile函数来输出文件，对于普通应用设为 on，如果用来进行下载等应用磁盘IO重负载应用，可设置为off，
+	#以平衡磁盘与网络I/O处理速度，降低系统的负载。注意：如果图片显示不正常把这个改成off
+	sendfile_max_chunk 100k; #每个进程每次调用传输数量不能大于设定的值，默认为0，即不设上限。
+	keepalive_timeout 65; #连接超时时间，默认为75s，可以在http，server，location块。
+	error_page 404 https://www.baidu.com; #错误页
+	
+    server { #单个server的配置
+		keepalive_requests 120; #单连接请求上限次数。
+		listen  4545; #监听端口
+		server_name 127.0.0.1; #监听地址 可能存在一个ip地址对应多个server_name的情况。 这种情况完全匹配 > 通配符在前面 > 通配符在后面的 > 正则
+		location ~*^.+$ {  #请求的url过滤，正则匹配，~为区分大小写，~*为不区分大小写。   
+			#root path; #根目录   
+			#index vv.txt; #设置默认页   
+			proxy_pass http://mysvr; #请求转向mysvr 定义的服务器列表，即下列的upstream定义的列表
+			deny 127.0.0.1; #拒绝的ip  与allow可以出现多次
+			allow 172.18.5.54; #允许的ip 
+			
+			#以下是一些反向代理的配置可删除.
+			proxy_redirect off;
+ 
+			#后端的Web服务器可以通过X-Forwarded-For获取用户真实IP
+			proxy_set_header Host $host;
+			proxy_set_header X-Real-IP $remote_addr;
+			proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+			client_max_body_size 10m;  #允许客户端请求的最大单文件字节数，上传文件需要改大一点
+			client_body_buffer_size 128k; #缓冲区代理缓冲用户端请求的最大字节数，
+			proxy_connect_timeout 90; #nginx跟后端服务器连接超时时间(代理连接超时)
+			proxy_send_timeout 90;    #后端服务器数据回传时间(代理发送超时)
+			proxy_read_timeout 90;     #连接成功后，后端服务器响应时间(代理接收超时)
+			proxy_buffer_size 4k;       #设置代理服务器（nginx）保存用户头信息的缓冲区大小
+			proxy_buffers 4 32k;        #proxy_buffers缓冲区，网页平均在32k以下的话，这样设置
+			proxy_busy_buffers_size 64k;  #高负荷下缓冲大小（proxy_buffers*2）
+			proxy_temp_file_write_size 64k; #设定缓存文件夹大小，大于这个值，将从upstream服务器传			
+		}
+	}
+	
+	server { #单个server的配置,http中可以有多个server
+		
+	}
+	
+	upstream mysvr {   #服务器集群
+			ip_hash; #默认负载均衡方式为加权轮询，可以使用ip_hash来使用ip哈希
+			server 127.0.0.1:7878  weight=1;#权重越大 分配的几率越大   默认为1
+			server 192.168.10.121:3333 max_fails=3 fail_timeout=10s; #失败3次之后10s内就不在访问了， 默认是60s 
+	} 
+	
+	#http的全局配置
+}
+
+#http模块的其他配置
+#使用位置为location
+#location  /i/ { #访问/i/test.jpg 会返回文件/spool/w3/images/test.jpg,不能用于正则表达式中，无默认值。使用位置location
+# alias   /spool/w3/images/;
+#}
+#使用位置http、server、location
+client_body_in_file_only on; #当开启这个，ngnix会将客户端请求存储进文件中，并且请求完成后文件不会被移除。默认为off
+client_body_in_single_buffer on;#是否将整个请求放置到一个buffer中，默认为off，
+client_body_buffer_size 128k; #缓冲区代理缓冲用户端请求的最大字节数，默认为8/16K(根据平台决定) 
+client_body_temp_path /temp/client_temp 1 2;#请求体的临时存放地址 1 2 为级别。
+client_body_timeout 60; #客户端发送请求，如果发送间隔大于这个时间，将会timeout(408),默认为60
+client_max_body_size 100m; #content-length的最大长度，默认1m
+error_page 400 404 500 /404.html; #配置错误页面，可跟多个code
+keepalive_timeout 75; #指与客户端之间保持连接的时间。
+
+#使用位置为http server
+client_header_buffer_size 1k; #客户端请求头的buffer大小 默认为1k
+client_header_timeout 60; #与上述client_body_timeout相似
+

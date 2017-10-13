@@ -30,7 +30,7 @@ events { #事件驱动模型配置
 	
 	#devpoll_changes ; #?
 	
-	debug_connection 127.0.0.1; #调试127.0.0.1的连接，只有使用--with--debug参数编译的ngnix有效
+	debug_connection 127.0.0.1; #调试127.0.0.1的连接，只有使用--with--debug参数编译的nginx有效
 }
 
 http{ #http的配置
@@ -59,21 +59,45 @@ http{ #http的配置
 			allow 172.18.5.54; #允许的ip 
 			
 			#以下是一些反向代理的配置可删除.
-			proxy_redirect off;
- 
-			#后端的Web服务器可以通过X-Forwarded-For获取用户真实IP
-			proxy_set_header Host $host;
+			#proxy_buffer_size 4K/8K; #从上游服务器返回的响应内容会存放在缓冲区里，这儿设置大小，等于使用了proxy_buffers指令设置的大小。 http, server, location (响应头信息会先放在这儿)
+			#proxy_buffering on;      #是否开启缓存从上游服务器返回的响应内容。                                                          http, server, location
+			#proxy_buffers 8 4k/8k;   #与proxy_buffer_size指令作用一致。用于设置缓冲区的大小和数量，默认情况下， 设置为页面大小          http, server, location
+			#proxy_busy_buffers_size 64k;  #高负荷下缓冲大小（proxy_buffers*2）                                                          http, server, location, if
+			#proxy_connect_timeout 75;     #当nginx访问上游服务器时 如果服务器没有建立连接的超时时间，超时过后nginx会转向服务列表的其他服务器。再次访问时不在访问该服务器。 http, server, location
+			#proxy_headers_hash_bucket_size 64; #类似java中为hashMap指定size?                                                            http, server, location, if
+			#proxy_headers_hash_max_size 512;                                                                                            http, server, location, if
+			
+			proxy_hide_header Other-Header; #指定代理转发时不转发other header头 可出现多次                                               http, server, location
+			proxy_pass_header Server-Ip;    #指定代理转发时转发Server-Ip头 可出现多次                                                    http, server, location
+			
+			#proxy_ignore_client_abort off; #如果客户端断开连接 也保持后端的下载                                                         http, server, location
+			#proxy_intercept_errors off;    #开启之后nginx会拦截响应码大于400的响应，并使用error_page指令配置的错误。类似于开启指定对应错误的错误页。                        http, server, location
+			
+			#proxy_max_temp_file_size 1G;   #代理临时文件的最大大小 1.8以后可使用                                                        http, server, location, if
+			proxy_method POST;              #代理哪些请求类型                                                                            http, server, location
+
+			#proxy_next_upstream error timeout; #代理出错时换另一个服务 值还可为 invalid_header|http_500|http_503|http_404|off(关闭)     http, server, location
+			#proxy_pass_request_body on; #是否转发body                  http, server, location
+			#proxy_pass_request_headers on; #是否转发头部               http, server, location
+			#proxy_redirect default; #当上游发生重定向时， Nginx是否同步更改url eg、proxy_redirect http://localhost:8080/code http://localhost:8081/code; or proxy_redirect off;#关闭 http, server, location
+			
+			#proxy_read_timeout 60;     #连接成功后，后端服务器响应间隔最大时间(代理接收超时)                                            http, server, location
+			#proxy_send_timeout 60;    #连接成功后，发送间隔超时                                                                         http, server, location
+			
+			#proxy_set_header Host $proxy_host; #默认带上Host和Connection                                                                http, server, location
+			#proxy_set_header Connection Close;                           
 			proxy_set_header X-Real-IP $remote_addr;
-			proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+			proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;#后端的Web服务器可以通过X-Forwarded-For获取用户真实IP       
+			
+			proxy_store   /data/www$original_uri; #会缓存代理的文件。默认off关闭，on会缓存到root或者alias指定的目录中                    http, server, location
+			proxy_temp_file_write_size 64k; #设定缓存文件夹大小，大于这个值，将从upstream服务器传。为proxy_buffer_size * 2               http, server, location, if
+			
+			#$proxy_host:: the name of proxied host and port;
+			#$proxy_port:: the port of proxied host;
+			#$proxy_add_x_forwarded_for:: equivalent to client request-header "X-Forwarded-For" and to variable added to it through the comma
+			
 			client_max_body_size 10m;  #允许客户端请求的最大单文件字节数，上传文件需要改大一点
 			client_body_buffer_size 128k; #缓冲区代理缓冲用户端请求的最大字节数，
-			proxy_connect_timeout 90; #nginx跟后端服务器连接超时时间(代理连接超时)
-			proxy_send_timeout 90;    #后端服务器数据回传时间(代理发送超时)
-			proxy_read_timeout 90;     #连接成功后，后端服务器响应时间(代理接收超时)
-			proxy_buffer_size 4k;       #设置代理服务器（nginx）保存用户头信息的缓冲区大小
-			proxy_buffers 4 32k;        #proxy_buffers缓冲区，网页平均在32k以下的话，这样设置
-			proxy_busy_buffers_size 64k;  #高负荷下缓冲大小（proxy_buffers*2）
-			proxy_temp_file_write_size 64k; #设定缓存文件夹大小，大于这个值，将从upstream服务器传			
 		}
 	}
 	
@@ -82,7 +106,7 @@ http{ #http的配置
 	}
 	
 	upstream mysvr {   #服务器集群
-			ip_hash; #默认负载均衡方式为加权轮询，可以使用ip_hash来使用ip哈希
+			ip_hash; #默认负载均衡方式为加权轮询，可以使用ip_hash来使用(访问者的ip)ip哈希
 			server 127.0.0.1:7878  weight=1;#权重越大 分配的几率越大   默认为1
 			server 192.168.10.121:3333 max_fails=3 fail_timeout=10s; #失败3次之后10s内就不在访问了， 默认是60s 
 	} 

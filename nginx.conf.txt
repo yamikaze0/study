@@ -12,7 +12,7 @@ worker_rlimit_nofile 65535;
 
 pid /ngnix/pid/ngnix.pid; #ngnix master进程pid存放路径，默认为logs/ngnix.pid
 
-#worker_process 1; #ngnix将会启动多少个工作进程，数量一般与cpu数一致，每行配置末尾都要加上;号
+worker_process 1; #ngnix将会启动多少个工作进程，数量一般与cpu数一致，每行配置末尾都要加上;号
 
 #error_log logs/error.log debug; #日志存放文件 debug为日志级别;
 
@@ -49,14 +49,18 @@ http{ #http的配置
 	
     server { #单个server的配置
 		keepalive_requests 120; #单连接请求上限次数。
-		listen  4545; #监听端口
+		listen  80; #监听端口
 		server_name 127.0.0.1; #监听地址 可能存在一个ip地址对应多个server_name的情况。 这种情况完全匹配 > 通配符在前面 > 通配符在后面的 > 正则
 		location ~*^.+$ {  #请求的url过滤，正则匹配，~为区分大小写，~*为不区分大小写。   
-			#root path; #根目录   
-			#index vv.txt; #设置默认页   
+			#root path; #根目录    
+			#index vv.txt; #设置默认页，如果设置了多个相当于web.xml中的index list  http, server, location
 			proxy_pass http://mysvr; #请求转向mysvr 定义的服务器列表，即下列的upstream定义的列表
-			deny 127.0.0.1; #拒绝的ip  与allow可以出现多次
-			allow 172.18.5.54; #允许的ip 
+			#除了10.1.1.0/16和192.168.1.0/24中除了192.168.1.1的都不能访问          http, server, location, limit_except
+			deny    192.168.1.1;
+			allow   192.168.1.0/24;
+			allow   10.1.1.0/16;                                                   http, server, location, limit_except
+			deny    all;
+		
 			
 			#以下是一些反向代理的配置可删除.
 			#proxy_buffer_size 4K/8K; #从上游服务器返回的响应内容会存放在缓冲区里，这儿设置大小，等于使用了proxy_buffers指令设置的大小。 http, server, location (响应头信息会先放在这儿)
@@ -74,7 +78,7 @@ http{ #http的配置
 			#proxy_intercept_errors off;    #开启之后nginx会拦截响应码大于400的响应，并使用error_page指令配置的错误。类似于开启指定对应错误的错误页。                        http, server, location
 			
 			#proxy_max_temp_file_size 1G;   #代理临时文件的最大大小 1.8以后可使用                                                        http, server, location, if
-			proxy_method POST;              #代理哪些请求类型                                                                            http, server, location
+			proxy_method POST;              #代理哪些请求类型,只能出现一次，而且不能为这种写法: proxy_method GET POST;                                                                          http, server, location
 
 			#proxy_next_upstream error timeout; #代理出错时换另一个服务 值还可为 invalid_header|http_500|http_503|http_404|off(关闭)     http, server, location
 			#proxy_pass_request_body on; #是否转发body                  http, server, location

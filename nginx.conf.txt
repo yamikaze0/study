@@ -34,35 +34,88 @@ events { #事件驱动模型配置
 }
 
 http{ #http的配置
-    
+
 	#http的全局配置
+
+	#日志配置
+	#usage： access_log path [format [buffer=size | off]                http,server,location
+	#access_log log/access.log combined; #使用预置的combined格式，具体格式可查看日志文件。
+	access_log off;#关闭日志
+	#                     client ip       user         本地时间       请求    响应码   发送字节           refer头        用户(浏览器)信息
+ 	#log_format myFormat '$remote_addr - $remote_user [$time_local] $request $status $apache_bytes_sent $http_referer $http_user_agent;       http,server
+	
+	#会话并发设置
+	limit_conn_zone $binary_remote_addr zone=addr:10m;  #定义了一个addr记录区，纪录区大小为10MB, 以$binary_remote_addr作为判断基准。                http
+                                             #ps：$remote_addr长度为7-15bytes,会话信息长度为32 or 64bytes。而$binary_remote_addr长度为4bytes，会话为32bytes
+                                             #计算可以得出 1m 的大小可以记录会话数32000：1m = 1024 * 1024 / 32
+	#limit_conn_status 503; #设置超出会话连接时的状态码
+	limit_conn_log_level warn; #info|notice|warn|error|
+	
+	#请求并发设置
+	limit_req_zone $binary_remote_addr zone=one:1m rate=1r/s;#表示使用$binary_remote_addr作为判断基准，名为one，大小为1M，访问频率为1r/s   http
+	
+	server {
+		location /download {
+			empty_gif;#nginx内存中常驻了一个1*1的透明gif图像，可以被非常快速的调用,访问时路径为_.gif                                       location
+			limit_req zone=one burst=5 nodelay;#允许用户平均每秒不超过1个请求，每次不超过5个查询。
+			limit_conn addr 10; #表示一个ip地址在download目录下只能进行一个连接。多过一个503                                               http,server,location
+			root $uri;
+		}
+	}
+	
+	#一些常用设置
+	server {
+		listen 80;  #server 监听的端口号
+		server_name localhost; #服务名，可跟多个服务名。 精确匹配>通配符在前>通配符在后>regex
+		location /common {
+			#root html; #根目录 此外有alias指令与其作用是一致的                    #http, server,location
+			alias /download;  #不能用于正则表达式中，无默认值                      location
+			#index index.html index.htm; #设置默认页，如果设置了多个相当于web.xml中的index list  http, server, location
+			#auth模块
+			#除了10.1.1.0/16和192.168.1.0/24中除了192.168.1.1的都不能访问          http, server, location, limit_except
+			deny    192.168.1.1;
+			allow   192.168.1.0/24;
+			allow   10.1.1.0/16;                                                   http, server, location, limit_except
+			deny    all;
+		}
+	}
+	
+	#错误页设置
+	error_page 404 https://www.baidu.com; #错误页 可跟多个code        http,server,location, if in location
+	
+	#客户端设置
+	#使用位置http、server、location
+	client_body_in_file_only on; #当开启这个，ngnix会将客户端请求存储进文件中，并且请求完成后文件不会被移除。默认为off
+	client_body_in_single_buffer on;#是否将整个请求放置到一个buffer中，默认为off，
+	client_body_buffer_size 128k; #缓冲区代理缓冲用户端请求的最大字节数，默认为8/16K(根据平台决定) 
+	client_body_temp_path /temp/client_temp 1 2;#请求体的临时存放地址 1 2 为级别。
+	#client_body_timeout 60; #客户端发送请求，如果发送间隔大于这个时间，将会timeout(408),默认为60
+	#client_max_body_size 1m; #content-length的最大长度，默认1m
+	#keepalive_timeout 75; #指与客户端之间保持连接的时间。
+	#keep_requests 100;    #一个类型为keep-alive的连接能发起的请求
+	
+	#使用位置为http server
+	client_header_buffer_size 1k; #客户端请求头的buffer大小 默认为1k
+	client_header_timeout 60; #与上述client_body_timeout相似
+	
+	#请求类型。
 	include mime.types; #文件扩展名文件存放位置
-	default_type application/octet-stream; #默认文件类型为text/plain
+	default_type application/octet-stream; #默认文件类型为text/plain           http,server、location
+	
 	log_format myFormat '$remote_addr–$remote_user [$time_local] $request $status $body_bytes_sent;#自定义日志格式
 	access_log log/access_log.log myFormat; #将访问日志放置与access_log.log文件中。指定格式为自定义格式，默认格式为combined
 	sendfile on; #允许sendfile方式传输文件，默认为off，可以在http块、server块、location块中
 	#sendfile指令指定nginx是否调用sendfile函数来输出文件，对于普通应用设为 on，如果用来进行下载等应用磁盘IO重负载应用，可设置为off，
 	#以平衡磁盘与网络I/O处理速度，降低系统的负载。注意：如果图片显示不正常把这个改成off
 	sendfile_max_chunk 100k; #每个进程每次调用传输数量不能大于设定的值，默认为0，即不设上限。
-	keepalive_timeout 65; #连接超时时间，默认为75s，可以在http，server，location块。
-	error_page 404 https://www.baidu.com; #错误页
 	
-    server { #单个server的配置
-		keepalive_requests 120; #单连接请求上限次数。
-		listen  80; #监听端口
-		server_name 127.0.0.1; #监听地址 可能存在一个ip地址对应多个server_name的情况。 这种情况完全匹配 > 通配符在前面 > 通配符在后面的 > 正则
-		location ~*^.+$ {  #请求的url过滤，正则匹配，~为区分大小写，~*为不区分大小写。   
-			#root path; #根目录    
-			#index vv.txt; #设置默认页，如果设置了多个相当于web.xml中的index list  http, server, location
+	
+	#反向代理
+    server { 
+		location /proxy {
 			proxy_pass http://mysvr; #请求转向mysvr 定义的服务器列表，即下列的upstream定义的列表
-			#除了10.1.1.0/16和192.168.1.0/24中除了192.168.1.1的都不能访问          http, server, location, limit_except
-			deny    192.168.1.1;
-			allow   192.168.1.0/24;
-			allow   10.1.1.0/16;                                                   http, server, location, limit_except
-			deny    all;
-		
 			
-			#以下是一些反向代理的配置可删除.
+			#以下反向代理配置可删除.
 			#proxy_buffer_size 4K/8K; #从上游服务器返回的响应内容会存放在缓冲区里，这儿设置大小，等于使用了proxy_buffers指令设置的大小。 http, server, location (响应头信息会先放在这儿)
 			#proxy_buffering on;      #是否开启缓存从上游服务器返回的响应内容。                                                          http, server, location
 			#proxy_buffers 8 4k/8k;   #与proxy_buffer_size指令作用一致。用于设置缓冲区的大小和数量，默认情况下， 设置为页面大小          http, server, location
@@ -99,9 +152,6 @@ http{ #http的配置
 			#$proxy_host:: the name of proxied host and port;
 			#$proxy_port:: the port of proxied host;
 			#$proxy_add_x_forwarded_for:: equivalent to client request-header "X-Forwarded-For" and to variable added to it through the comma
-			
-			client_max_body_size 10m;  #允许客户端请求的最大单文件字节数，上传文件需要改大一点
-			client_body_buffer_size 128k; #缓冲区代理缓冲用户端请求的最大字节数，
 		}
 	}
 	
@@ -117,23 +167,3 @@ http{ #http的配置
 	
 	#http的全局配置
 }
-
-#http模块的其他配置
-#使用位置为location
-#location  /i/ { #访问/i/test.jpg 会返回文件/spool/w3/images/test.jpg,不能用于正则表达式中，无默认值。使用位置location
-# alias   /spool/w3/images/;
-#}
-#使用位置http、server、location
-client_body_in_file_only on; #当开启这个，ngnix会将客户端请求存储进文件中，并且请求完成后文件不会被移除。默认为off
-client_body_in_single_buffer on;#是否将整个请求放置到一个buffer中，默认为off，
-client_body_buffer_size 128k; #缓冲区代理缓冲用户端请求的最大字节数，默认为8/16K(根据平台决定) 
-client_body_temp_path /temp/client_temp 1 2;#请求体的临时存放地址 1 2 为级别。
-client_body_timeout 60; #客户端发送请求，如果发送间隔大于这个时间，将会timeout(408),默认为60
-client_max_body_size 100m; #content-length的最大长度，默认1m
-error_page 400 404 500 /404.html; #配置错误页面，可跟多个code
-keepalive_timeout 75; #指与客户端之间保持连接的时间。
-
-#使用位置为http server
-client_header_buffer_size 1k; #客户端请求头的buffer大小 默认为1k
-client_header_timeout 60; #与上述client_body_timeout相似
-

@@ -55,10 +55,30 @@ http{ #http的配置
 	limit_req_zone $binary_remote_addr zone=one:1m rate=1r/s;#表示使用$binary_remote_addr作为判断基准，名为one，大小为1M，访问频率为1r/s   http
 	
 	server {
+		
+		#gzip off; #on开启gzip模块                      http,server,location, if (X) location
+		#gzip_buffers 4 4/8k;# 4 4K表示以4k为单位，按照原始数据大小以4k为单位申请4倍内存  http,server,location
+		#gzip_comp_level 1; #压缩比 1-9，压缩比越大则处理越慢                             http,server,location
+		#gzip_min_length 0; #允许压缩页面的最小字节数，即Conten-length的大小，0表示无论多大都压缩，建议设为1k以上，1k以下可能会越压缩越大 http,server,location
+		#gzip_http_version 1.1;#可能一些浏览器不支持gzip自解压，用户看到就会乱码。但现在90%的浏览器都支持，保持默认值即可。
+		#gzip_proxied off;     #off - 关闭所有的代理结果数据的压缩
+							   #expired - 启用压缩，如果header头中包含 "Expires" 头信息
+							   #no-cache - 启用压缩，如果header头中包含 "Cache-Control:no-cache" 头信息
+							   #no-store - 启用压缩，如果header头中包含 "Cache-Control:no-store" 头信息
+							   #private - 启用压缩，如果header头中包含 "Cache-Control:private" 头信息
+							   #no_last_modified - 启用压缩,如果header头中不包含 "Last-Modified" 头信息
+							   #no_etag - 启用压缩 ,如果header头中不包含 "ETag" 头信息
+						       #auth - 启用压缩 , 如果header头中包含 "Authorization" 头信息
+							   #any - 无条件启用压缩
+		#gzip_types text/html; #匹配MIME类型进行压缩。
+		#压缩常规文件类型
+		gzip text/plain application/x-javascript text/css text/html application/xml;
+		
 		location /download {
 			empty_gif;#nginx内存中常驻了一个1*1的透明gif图像，可以被非常快速的调用,访问时路径为_.gif                                       location
 			limit_req zone=one burst=5 nodelay;#允许用户平均每秒不超过1个请求，每次不超过5个查询。
 			limit_conn addr 10; #表示一个ip地址在download目录下只能进行一个连接。多过一个503                                               http,server,location
+			limit_rate 200k;    #每个连接的带宽
 			root $uri;
 		}
 	}
@@ -68,6 +88,14 @@ http{ #http的配置
 		listen 80;  #server 监听的端口号
 		server_name localhost; #服务名，可跟多个服务名。 精确匹配>通配符在前>通配符在后>regex
 		location /common {
+			valid_referers blocked localhost www.baidu.com;#表示referer头必须符合valid_referers后面跟的列表，server_name支持通配符,默认为none server,location
+			if ($invalid_referer) { #如果referer头不符合上述的列表，这个变量的值将为1。特别注意：指令后面要跟空格，否则nginx无法识别，这儿if后面需要一个空格。
+																				   #if in server, location
+																				   #break in server, location, if
+				return 403;                                                        #server,location, if
+			}
+			rewrite /1.html 1.mp4;#重定向1.html至1.mp4, rewrite后也由这个location处理, 支持regex表达式 server, location if;
+			
 			#root html; #根目录 此外有alias指令与其作用是一致的                    #http, server,location
 			alias /download;  #不能用于正则表达式中，无默认值                      location
 			#index index.html index.htm; #设置默认页，如果设置了多个相当于web.xml中的index list  http, server, location
@@ -77,6 +105,13 @@ http{ #http的配置
 			allow   192.168.1.0/24;
 			allow   10.1.1.0/16;                                                   http, server, location, limit_except
 			deny    all;
+			
+			#http响应头设置
+			add_header aaa bbb; #表示响应码为200,204,301,302,304时加上aaa的header，value为bbb http, server, location
+			
+			#expires off; #表示不修改Expires和Cache-Control的头信息，默认          http, server,location
+			#expires max;#缓存过期时间设置为10年
+			#expires 1; #如果为负数，表示Expires为永远过期。为负数 Cache-Control:no-cache 正数则为Cache-Control:max-age=#
 		}
 	}
 	
@@ -154,6 +189,22 @@ http{ #http的配置
 			#$proxy_add_x_forwarded_for:: equivalent to client request-header "X-Forwarded-For" and to variable added to it through the comma
 		}
 	}
+	
+	#geo指令将ip地址映射为值
+	geo $remote_addr $geo { #$remote_addr可以不加 http
+		default 1;
+		127.0.0.1 0;
+	}
+	
+	map $geo $limit {                       #http
+		1 $binary_remote_addr;
+		0 '';
+	}
+	
+	#map_hash_max_size 2048;                #http
+	#map_hash_bucket_size 32/64/128;        #http
+	
+	limit_conn_zone $limit zone=limit:10m;
 	
 	server { #单个server的配置,http中可以有多个server
 		

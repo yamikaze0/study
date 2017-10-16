@@ -31,8 +31,8 @@
 -XX:NewRatio 设置新生代与老年代的比例
 例如: -XX:NewRatio = 3 表示 (Eden + Survivor * 2) / Old = 3
 
--XX:PermSize 设置持久代(永久代方法区)初始大小。
--XX:MaxPermSize 设置持久代的最大初始大小 一般设置为64MB和128MB，如果这样还不能满足需求，需要对系统进行优化。
+-XX:PermSize 设置持久代(永久代方法区)初始大小。已被-XX:MetaSpaceSize代替
+-XX:MaxPermSize 设置持久代的最大初始大小 一般设置为64MB和128MB，如果这样还不能满足需求，需要对系统进行优化。已被-XX:MaxMetaSpaceSize代替
 
 -Xss:设置虚拟机栈的大小。(当栈的内存不够时也会抛出OOM错误)
 

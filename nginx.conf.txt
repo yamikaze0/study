@@ -124,7 +124,7 @@ http{ #http的配置
 	client_body_in_single_buffer on;#是否将整个请求放置到一个buffer中，默认为off，
 	client_body_buffer_size 128k; #缓冲区代理缓冲用户端请求的最大字节数，默认为8/16K(根据平台决定) 
 	client_body_temp_path /temp/client_temp 1 2;#请求体的临时存放地址 1 2 为级别。
-	#client_body_timeout 60; #客户端发送请求，如果发送间隔大于这个时间，将会timeout(408),默认为60
+	#client_body_timeout 60; #客户端发送请求，如果发送间隔大于这个时间，将会timeout(408)
 	#client_max_body_size 1m; #content-length的最大长度，默认1m
 	#keepalive_timeout 75; #指与客户端之间保持连接的时间。
 	#keep_requests 100;    #一个类型为keep-alive的连接能发起的请求

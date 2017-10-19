@@ -26,7 +26,7 @@
 			
 -XX:HandlePromotionFailure:发生Minor GC前，虚拟机会先检查老年代的最大可用连续空间是否大于新生代的所有对象总空间。如果条件成立，则这次Minor GC是安全的。
                            如果不成立，则会查看该值是否允许担保失败，如果允许，虚拟机查看最大可用连续空间是否大于历次晋升到老年代对象的平均大小，如果大于则会尝试进行一次Minor GC。否则改为进行Full GC
-						   eg、-XX:-HandlePromotionFailure //false
+						   eg、-XX:-HandlePromotionFailure //false 已被废弃。
 																	
 -XX:NewRatio 设置新生代与老年代的比例
 例如: -XX:NewRatio = 3 表示 (Eden + Survivor * 2) / Old = 3

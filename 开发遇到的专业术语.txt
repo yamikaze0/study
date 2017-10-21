@@ -108,9 +108,9 @@ QRcode：Quick Response code 快速响应矩阵码(二维码)
 C10K: Connection 10K/S Ngnix(Ngine X)解决了一秒之内客户端的连接数目10K的问题。
 
 LOC: Line Of Code 代码行数
-PV: 即PageView, 即页面浏览量或点击量，用户每次刷新即被计算一次。我们可以认为，用户的一次刷新，给服务器造成了一次请求。
+PV: 即Page View, 即页面浏览量或点击量，用户每次刷新即被计算一次。我们可以认为，用户的一次刷新，给服务器造成了一次请求。
 
-UV: 即UniqueVisitor,访问您网站的一台电脑客户端为一个访客。00:00-24:00内相同的客户端只被计算一次。
+UV: 即Unique Visitor,访问您网站的一台电脑客户端为一个访客。00:00-24:00内相同的客户端只被计算一次。
 
 TPS:TPS(Transaction Per Second)每秒钟系统能够处理的交易或事务的数量，它是衡量系统处理能力的重要指标。
 
@@ -125,5 +125,9 @@ I/O: I/O可分为磁盘IO和网卡IO。
 流量: 性能测试中，一般指单位时间内流经网卡的总流量。分为inbound和outbound，一般以KB为单位。
 
 SOP: Same Origin Prolicy 同源策略，浏览器为了防止受到Xss、CSFR攻击，对ajax以及fetch请求会限制发起请求(域名、端口、协议只有有一个不同)，但img等不会。
+
+LAMP : Linux + Apache + Mysql + PHP
+二八定律：80%的业务访问集中在20%的数据上。 80%的财富掌握在20%的人手上
+
 
 

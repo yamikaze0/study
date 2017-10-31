@@ -128,6 +128,6 @@ SOP: Same Origin Prolicy 同源策略，浏览器为了防止受到Xss、CSFR攻击，对ajax以及fe
 
 LAMP : Linux + Apache + Mysql + PHP
 二八定律：80%的业务访问集中在20%的数据上。 80%的财富掌握在20%的人手上
-
+CSRF:Cross Site Request Forgery跨站点请求伪造。
 
 

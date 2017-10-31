@@ -1,0 +1,37 @@
+windows的批处理文件后缀必须为bat
+
+@echo off：
+      如果想关闭指令前的C：XXX提示，可以使用这个指令让不显示以及禁止显示批处理文件中的指令，包括echo off
+	  echo off与@echo off类似，但@echo off不会显示echo off
+	  
+rem 注释
+rem 注释
+
+pause 暂停处理文件，并且要求用户按键，提示为按任意键继续
+
+echo 输出函数，这点与linux类似，使用%%来引用变量，
+例如想输出JAVA_HOME，可以使用echo %JAVA_HOME%,ps：不区分大小写，这样也是可以的 echo %JAVA_HOMe%
+
+set xxx 设置环境变量，但在程序退出后会将变量返回到改变前
+
+label
+:end   类似于java中的标签，使用goto可以跳转到标签
+
+if条件判断
+主要用于 1、判断变量的值       set variable1=3 if %variable1%==3 echo start
+         2、判断文件是否存在   if exsit c:/windows goto end //exist判断文件是否存在
+		 3、测试错误值
+		 not取反，例如         set variable1=3 if not %variable1%==3 echo start
+
+参数
+%1表示第一个参数，以此类推，与linux类似，linux是使用$表示
+shift 把参数往后移一位，第一个参数变为第二个参数，以此类推 然后用%0表示第一个参数
+
+setLocal指明改变环境变量全是本地的，会在遇到endLocal以及执行完毕后恢复
+
+start 打开一个新的窗口
+
+call 调用另一个文件或者指令
+
+exit 退出		 
+

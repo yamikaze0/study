@@ -4,6 +4,8 @@
        Java 运行时 JVM参数设置
 	   
 ============================================================================================================================
+-Xss:设置虚拟机栈以及本地方法栈的大小。 对于Hotspot来说，虽然-Xoss(设置本地方法栈的大小)存在，但实际无效
+    eg、-Xss16K
 
 -Xmx:设置java堆的最大值(新生代与老年代)
    eg、-Xmx5M or -Xmx16k
@@ -31,10 +33,10 @@
 -XX:NewRatio 设置新生代与老年代的比例
 例如: -XX:NewRatio = 3 表示 (Eden + Survivor * 2) / Old = 3
 
--XX:PermSize 设置持久代(永久代方法区)初始大小。已被-XX:MetaSpaceSize代替
--XX:MaxPermSize 设置持久代的最大初始大小 一般设置为64MB和128MB，如果这样还不能满足需求，需要对系统进行优化。已被-XX:MaxMetaSpaceSize代替
+-XX:PermSize 设置持久代(永久代方法区)初始大小。已被-XX:MetaspaceSize代替
+-XX:MaxPermSize 设置持久代的最大初始大小 一般设置为64MB和128MB，如果这样还不能满足需求，需要对系统进行优化。已被-XX:MaxMetaspaceSize代替
 
--Xss:设置虚拟机栈的大小。(当栈的内存不够时也会抛出OOM错误)
+-XX:MaxDirectMemorySize 设置NIO包装区内存大小。
 
 -XX:+PrintGCDetails 打印出GC日志
 

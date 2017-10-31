@@ -1,0 +1,256 @@
+shell script:shell脚本，是由c语言编写的程序
+	既是一种命令语言，又是一种程序设计语言
+
+我们谈论的shell编程是shell脚本编程，并不是shell本身
+
+shell是用户使用linux的桥梁，我们在linux系统下使用的cd、pwd等指令都对应了一个shell脚本
+
+linux下的shell大致分为几类
+
+1、bourne shall --->sh 大部分指/bin/sh或者/usr/bin/sh
+2、bourne again shell ---->bsh /bin/bash   -----> 主研究
+3、c shell  ------> /usr/bin/csh
+4、k shell  ------> /usr/bin/ksh
+5、shell for root ---->/sbin/sh  对应Super User的一些命令
+
+运行shell脚本需要一个解释器和一个编译器(Notepad++等均可)
+
+shell第一行为
+#!/bin/sh 指定由哪一个解释器执行
+
+第一个shell脚本
+
+#!/bin/bash
+echo 'Hello World!'
+
+将以上代码保存为filename.sh就可运行
+
+运行方式 使用第一行 + filename可运行
+或者使用指令
+chmod x+ filename 让其变为一个可执行的文件
+
+shell的变量定义方式与python一致 在python或者java中是 username = "string"
+				在shell中，变量和复制语句之间不要有空格
+				即username="string"才是合法的
+但是首字符必须是字母，有字母和下划线组成
+使用变量需要在变量前加上字符$
+
+eg、
+   username = "yamikaze"
+   echo $username
+   echo ${username}  #这是注释，加上{}有助于echo识别单词的边界 eg、echo ${username}password
+
+
+只读变量：
+  定义一个变量 username="Hello"
+	       readonly username ---> change username to readonly
+	       这个变量就不能再重新赋值了，也不能被删除变量unset删除了
+	      
+
+全局变量
+局部变量
+shell变量
+
+字符串变量：可以使用单引号或者双引号来定义
+注意点：使用单引号输出时，会原样输出 eg、 echo '$name is xxx' 得到的结果是$name is xxx
+	使用单引号时，不能出现单引号，对单引号进行转义后也不行
+	而双引号可以
+
+获取字符串的长度 ${#String},在引用前加上#号
+字符串支持python似的切片
+
+eg、${string:1:4}取1到4的位置
+
+数组定义方式(bash)只支持一维数组
+
+array = (1 2 3 54 6 )
+获取数组元素方式 ${array[index]}
+可以使用不连续的下标，下标的范围没有边界
+# 取得数组元素的个数
+length=${#array_name[@]}
+# 或者
+length=${#array_name[*]}
+# 取得数组单个元素的长度
+length=${#array_name[n]}
+
+shell中没有多行注释，只有单行注释
+若想要多行注释，可以将要注释的代码写入一个函数中，不被调用即可
+
+参数
+$#	传递到脚本的参数个数
+$*	以一个单字符串显示所有向脚本传递的参数。
+如"$*"用「"」括起来的情况、以"$1 $2 … $n"的形式输出所有参数。
+$$	脚本运行的当前进程ID号
+$!	后台运行的最后一个进程的ID号
+$@	与$*相同，但是使用时加引号，并在引号中返回每个参数。
+如"$@"用「"」括起来的情况、以"$1" "$2" … "$n" 的形式输出所有参数。
+$-	显示Shell使用的当前选项，与set命令功能相同。
+$?	显示最后命令的退出状态。0表示没有错误，其他任何值表明有错误。
+
+
+运算符	说明	举例
+!	非运算，表达式为 true 则返回 false，否则返回 true。	[ ! false ] 返回 true。
+-o	或运算，有一个表达式为 true 则返回 true。	[ $a -lt 20 -o $b -gt 100 ] 返回 true。
+-a	与运算，两个表达式都为 true 才返回 true。	[ $a -lt 20 -a $b -gt 100 ] 返回 false
+
+字符串运算符
+下表列出了常用的字符串运算符，假定变量 a 为 "abc"，变量 b 为 "efg"：
+运算符	说明	举例
+=	检测两个字符串是否相等，相等返回 true。	[ $a = $b ] 返回 false。
+!=	检测两个字符串是否相等，不相等返回 true。	[ $a != $b ] 返回 true。
+-z	检测字符串长度是否为0，为0返回 true。	[ -z $a ] 返回 false。
+-n	检测字符串长度是否为0，不为0返回 true。	[ -n $a ] 返回 true。
+str	检测字符串是否为空，不为空返回 true。	[ $a ] 返回 true。
+
+文件测试运算符
+文件测试运算符用于检测 Unix 文件的各种属性。
+属性检测描述如下：
+操作符	说明	举例
+-b file	检测文件是否是块设备文件，如果是，则返回 true。	[ -b $file ] 返回 false。
+-c file	检测文件是否是字符设备文件，如果是，则返回 true。	[ -c $file ] 返回 false。
+-d file	检测文件是否是目录，如果是，则返回 true。	[ -d $file ] 返回 false。
+-f file	检测文件是否是普通文件（既不是目录，也不是设备文件），如果是，则返回 true。	[ -f $file ] 返回 true。
+-g file	检测文件是否设置了 SGID 位，如果是，则返回 true。	[ -g $file ] 返回 false。
+-k file	检测文件是否设置了粘着位(Sticky Bit)，如果是，则返回 true。	[ -k $file ] 返回 false。
+-p file	检测文件是否是有名管道，如果是，则返回 true。	[ -p $file ] 返回 false。
+-u file	检测文件是否设置了 SUID 位，如果是，则返回 true。	[ -u $file ] 返回 false。
+-r file	检测文件是否可读，如果是，则返回 true。	[ -r $file ] 返回 true。
+-w file	检测文件是否可写，如果是，则返回 true。	[ -w $file ] 返回 true。
+-x file	检测文件是否可执行，如果是，则返回 true。	[ -x $file ] 返回 true。
+-s file	检测文件是否为空（文件大小是否大于0），不为空返回 true。	[ -s $file ] 返回 true。
+-e file	检测文件（包括目录）是否存在，如果是，则返回 true。	[ -e $file ] 返回 true。
+
+echo命令用于输出字符串
+1、显示普通字符串 echo "It's a string"  echo It's string
+2、显示转义字符   echo "\"It's a string \""
+3、显示变量       echo "${username} is xxx"
+4、显示换行       echo -e "OK \n" #-e表示开启转义
+5、显示不换行     echo -e "OK \c" #\c不换行
+6、显示结果定向至文件 echo "It's a string" > myfile
+7、使用单引号时原样输出字符串，与上述string单引号一致
+8、显示命令执行的结果 echo ‘date‘ ----> 不是单引号
+
+shell中还有另一条指令用户输出，就是c中的printf函数
+格式：printf "string"
+shell的转义字符 echo也适用
+\a	警告字符，通常为ASCII的BEL字符
+\b	后退
+\c	抑制（不显示）输出结果中任何结尾的换行字符（只在%b格式指示符控制下的参数字符串中有效），而且，任何留在参数里的字符、任何接下来的参数以及任何留在格式字符串中的字符，都被忽略
+\f	换页（formfeed）
+\n	换行
+\r	回车（Carriage return）
+\t	水平制表符
+\v	垂直制表符
+\\	一个字面上的反斜杠字符
+\ddd	表示1到3位数八进制值的字符。仅在格式字符串中有效
+\0ddd	表示1到3位的八进制值字符
+
+shell中的test
+
+test命令用于检测条件是否成立，与jstl标签一致
+所用运算符与jstl一致，但要在之前加上-
+-eq	等于则为真
+-ne	不等于则为真
+-gt	大于则为真
+-ge	大于等于则为真
+-lt	小于则为真
+-le	小于等于则为真
+
+判断字符串：
+=	等于则为真 与java等其他语言有区别 java：==
+!=	不相等则为真
+-z 字符串	字符串的长度为零则为真
+-n 字符串	字符串的长度不为零则为真
+
+shell的流程控制
+shell的流程控制不能为空
+eg、
+
+if condition {
+  //code
+} else {
+  //不能为空，要么添加代码，要么就不要写else
+}
+
+格式如下：
+if [condition]
+then 
+    commands
+fi(if倒过来写)
+
+or：
+if [condition]
+then
+    commands
+elif [condition] (else if == elif 与python写法一致)
+then
+    commands
+fi
+
+for循环与python一致，但是可以不用加in
+
+while循环一致
+格式
+while codition
+do
+
+done
+
+函数定义：
+1、与js一致，使用function functionname定义
+eg、function sayHello() {
+	//operations
+    }
+2、不加function关键字
+eg、
+   sayHello() {
+	//operations
+   }
+
+返回值：
+ 每个函数都有返回值，与python一致，如果没有返回值，则会以最后一条指令的运行结果(没有出错为0，其他值均有错误发生)当做返回值
+ 函数的返回值使用$?来获取
+
+传入参数：
+ 
+ 格式：sayHello 1 2 3 4 5 (在函数内部获取时使用$numberIndex获取)
+ 
+ 比如 $1 表示获取第一个参数 但是当numberIndex>10时，获取方式变为${numberIndex}
+
+
+ 还有其他特殊字符参考上面
+
+  shell的重定向输出：
+  command > filename 输出到filename中，如果filename不存在，会创建，如果存在，会将里面的内容清空再写入
+  command < filename 输入到文件中
+  >> 追加，与cat指令一致
+
+  eg、
+     n>&m 将输出文件n、m合并
+     n<&m 将输入文件合并输出到shell程序中
+
+     <<tag与cat的指令一致
+如果希望执行某个命令，但又不希望在屏幕上显示输出结果，那么可以将输出重定向到 /dev/null：
+$ command > /dev/null
+
+shell文件包含：
+创建两个 shell 脚本文件。
+ 
+test1.sh 代码如下：
+#!/bin/bash
+# author:菜鸟教程
+# url:www.runoob.com
+
+url="http://www.runoob.com"
+test2.sh 代码如下：
+#!/bin/bash
+# author:菜鸟教程
+# url:www.runoob.com
+
+#使用 . 号来引用test1.sh 文件
+. ./test1.sh
+
+# 或者使用以下包含文件代码
+# source ./test1.sh
+
+echo "菜鸟教程官网地址：$url"

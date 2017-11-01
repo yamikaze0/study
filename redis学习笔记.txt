@@ -146,10 +146,3 @@ AOF：默认情况下没有开启AOF方式，可通过配置文件中的appendon
 		   GET a //AOF会将前三条命令写进AOF文件中。当达到一定条件时，AOF文件会重写
 SAVE 保存数据备份
 恢复数据只需要将SAVE产生的文件移动到Redis的安装目录启动就行了。
-
-Redis java使用方式
-1、导入Redis的包
-2、编写代码
-Redis r = new Redis("主机名");
-//方法 就是前面介绍的指令
-比如放值进入列表中：r.lpush("list1","sda");

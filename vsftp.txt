@@ -1,0 +1,28 @@
+listen=YES|NO #是否以独立的方式运行监听服务
+listen_address=IP地址 #监听的IP地址
+listen_port=21 #默认使用21端口来进行命令
+download_enable=YES|NO #是否允许下载文件
+userlist_enable=YES|NO #为NO表示只有下面两个名单的用户可以登录
+userlist_deny=YES|NO #是否启用禁止登陆名单，/etc/vsftpd/下的ftpusers以及userlist文件中的用户禁止登陆
+max_clients=0 #最大客户端连接数，0为不限制
+max_per_ip=0 #同一地址的最大连接数 0位不限制
+
+anonymous_enable=YES|NO #是否允许匿名登录
+anon_upload_enable=YES|NO #是否允许匿名用户上传文件
+anon_umask=022 #匿名用户上传文件的umask值
+anon_root=/var/ftp #匿名用户的ftp根目录
+anon_mkdir_write_enable=YES|NO #是否允许匿名用户创建目录
+anon_other_write_enable=YES|NO #是否允许匿名用户其他写入操作
+anon_max_rate=0    #匿名用户的最大传输速度，0位不限制
+
+local_enable=YES|NO #是否允许本地用户登录
+local_umask=022 #本地用户上传的umask值
+local_root=/var/ftp #本地用户的ftp根目录
+chroot_local_user=YES|NO #是否将本地用户权限禁锢在FTP目录内，YES
+local_max_rate=0 #本地用户传输速度 0不限制
+
+guest_enable=YES|NO #是否开启虚拟用户模式
+guest_username=file name #虚拟用户名单，单行username，双行password
+allow_writeable_chroot=YES|NO #允许禁锢的FTP目录可写而不拒绝用户的登录请求
+
+

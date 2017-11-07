@@ -58,3 +58,6 @@ key(username(10)) 只对username的前10个字符做索引，但这回降低索�
 而对于BLOB、TEXT类型 必须使用前缀索引，因为Mysql不允许对这些类型进行全值索引
 如果前缀选择性接近0.031就可以了
 遗憾的是Mysql的order by与group by不支持前缀索引，有前缀索引，也有后缀索引，但Mysql原生不支持后缀索引
+
+Mysql性能优化
+使用EXPLAIN查看sql语句查找类型

@@ -19,7 +19,7 @@
 -XX:SurvivorRatio设置新生代中Eden区与Survivor区域的大小(两个Survivor区是一样大的)
 例如：-XX:SurvivorRatio=3 表示Eden / (单个Survivor) = 3  ==> Eden / (2 * Survivor) = 1.5
 
--XX:TargetSurvivorRatio:设置Survivor区的使用率，当使用率大于该值时，该区域的所有对象都会进入老年代(不用经过回收次数限制)
+-XX:TargetSurvivorRatio:设置Survivor区的可使用率，当使用率大于该值时，该区域对象将会向老年代压缩，默认是50%
 -XX:MaxTenuringThreshold:设置经过几次LJ回收进入老年代,默认为15次。但有两种例外:
                                                                     1、大数据直接进入老年代。如果分配对象所占内存较大，将直接进入老年代。
 																	2、当Survivor区域的某一年龄的对象占该区域大小的一定值(好像是50%)时，该区域所有大于等于该年龄的对象都会进入老年代
@@ -41,8 +41,9 @@
 -XX:+PrintGCDetails 打印出GC日志
 
 -XX:MinHeapFreeRatio 设置堆的最小空闲比例，当堆的空闲内存小于该值时，JVM便会扩展堆空间
+eg、 -XX:MinHeapFreeRatio=40 当堆的空闲比例大于40时就会扩展堆空间
 -XX:MaxHeapFreeRatio 设置堆的最大空闲比例，当堆的空闲内存大于该值时，JVM便会压缩堆
-
+eg、-XX:MaxHeapFreeRatio=80 当堆的最大空闲比例大于80时就会压缩堆空间
 ============================================================================================================================
 
        Java 运行时 GC参数设置
@@ -64,13 +65,25 @@
 -XX:+UseSerialGC:新生代与老年代都使用串行独占式LJ回收器(最古老的LJ回收器，但性能经受住了考验)
 -XX:+UseParNewGC:新生代使用并行LJ回收器，老年代使用串行LJ回收器
 -XX:+UseParallelGC: 新生代使用并行回收，老年代使用串行回收
+-XX:ParallelGCThreads=20 设置20条线程进行lj回收
 -XX:+UseParallelOldGC:新生代与老年代都使用并行回收器
 -XX:+UseConcMarkSweepGC:新生代使用并行收集，老年代使用CMS收集
+-XX:ParallelCMSThreads:设定CMS的线程数量
+-XX:CMSInitiatingOccupancyFraction: 设置CMS收集器在老年代空间被使用多少后触发，默认68%
+
+#G1回收器
+-XX:GCPauseIntervalMillis 设置停顿时间
+-XX:MaxGCPauseMillis 最大停顿时间
+-XX:+UseG1GC  使用G1回收器进行回收
+-XX:+UnlockExperimentalVMOptions 开启G1回收器可以使用一些实验性参数
+
+-XX:GCTimeRatio 设置吞吐量大小，值为0 ~ 100之间的整数，然后将不会花费超过 1/(1 + n)的时间进行lj回收
+-XX:+UseAdaptiveSizePolicy 打开自适应GC策略，这个策略下，eden，survior，晋升阈值都会被自动调整，以达到在堆大小、吞吐量和停顿时间之间的平衡点。
 
 并行收集器的线程数可以使用-XX:ParalleGCThreads指定，一般下 最好与CPU数相当，
 ps:新生代GC叫做Minor GC 老年代GC叫做Full GC/ Major GC。Full GC的成本高于Minor GC。 发生一次Full GC通常会伴随着至少一次的Minor GC。且Full GC的速度比Minor GC慢10倍以上。
 
--XX:MaxDirectMemorySize制定直接内存大小。JDK1.4后加入的NIO就是使用这部分内存。
+-XX:MaxDirectMemorySize制定直接内存大小。JDK1.4后加入的NIO就是使用这部分内存。只有ByteBuffer的directAllocate方法才会使用这块内存
 
 ================================================================================================================================
 
@@ -116,3 +129,22 @@ OOM错误处理：-XX:OnOutOfMemoryError=F:\a.bat
 
 浅堆：指对象结构占用内存大小，比如String对象 浅堆大小 三个int + byte[] = 3 * 4 + 4 + 8(对象头) = 24.无论字符串多大，它的浅堆大小始终是24
 深堆：指对象被GC回收后释放的内存。包括仅仅该对象持有的对象占用的内存。
+
+=========================================other======================================================================================
+-XX:+TraceClassLoading 打开类加载过程 或者使用参数-verbose:class也能达到同样的效果
+-XX:+TraceClassUnloading 打开类卸载过程
+-XX:+PrintClassHistogram 打印运行时类的实例信息  好像没有用处，也许是我的测试方法不正确吧
+-Xnoclassgc 以这个参数启动程序将不会发生类的卸载
+-Xincgc, 系统将会进行增量式的GC，系统将会使用特定的算法让GC线程与应用程序进行交互。
+
+-XX:-UseSplitVerifier 关闭新的类校检器 JDK6以上默认使用新的类校检器进行校检，如果使用新的校检失败，则会使用老的校检
+-XX:-FailOverToOldVerifier 关闭新的校检器失败时启用老的校检器，-号代表关闭 +号代表开启
+
+-XX:+UseCompressedOops 打开指针压缩
+                       可以对Class的属性指针，对象的属性指针，普通数组对象的每个元素指针
+-XX:+UseLargePages 启动大页 可以提升系统性能
+-XX:LargePageSizeInBytes 指定大页的大小 -XX:LargePageSizeInBytes=256m
+
+
+
+

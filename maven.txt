@@ -1,4 +1,4 @@
-maven 三套声明周期 clean default site
+maven 三套生命周期 clean default site
 scope的值
 
 compile 打包，编译 测试，运行有效。默认为compile
@@ -9,13 +9,12 @@ runtime 运行(测试)时有效，其余无效
 
 provided 编译 运行有效，打包无效
 
-system
+system   系统内部的jar包，不是在maven仓库中引进的，需要配置路径，同时打包时也需要配置才能将system范围的jar打包
 
-???
 在一个生命周期中，运行某个阶段的时候，它之前的所有阶段都会被运行
+例如 clean package  那么package生命周期之前的所有周期都会被运行，比如说compile
 
-
-范围的传递
+依赖的传递：
 
 当范围为compile时，这个依赖就会传递
 意思就是，
@@ -31,7 +30,7 @@ system
 
 	D-->A
 	D-->C
-这种同级依赖谁先依赖就是谁
+这种同级依赖谁后依赖就是谁
 
 不同级的依赖谁的级别短就依赖谁
 

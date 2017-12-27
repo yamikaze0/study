@@ -136,4 +136,8 @@ CSRF:Cross Site Request Forgery跨站点请求伪造。
 GMV:Gross Merchandise Volume 成交总额
 O2O:Online to Offline线上线下平台
 
+CRM: Customer Relationship Management 客户关系管理
+
+API: Application Programming Interface 应用程序接口 例如dubbo服务的api
+SPI：Serial Peripheral Interface 串行外设接口
 

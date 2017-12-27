@@ -1,7 +1,7 @@
 
 ============================================================================================================================
 
-       Java 运行时 JVM参数设置
+       Java 运行时 JVM堆参数设置
 	   
 ============================================================================================================================
 -Xss:设置虚拟机栈以及本地方法栈的大小。 对于Hotspot来说，虽然-Xoss(设置本地方法栈的大小)存在，但实际无效
@@ -10,23 +10,28 @@
 -Xmx:设置java堆的最大值(新生代与老年代)
    eg、-Xmx5M or -Xmx16k
 -Xms:设置java堆的最小值(新生代与老年代)
-     如果JVM启动时分配的-Xms不足以使用，会申请更多的内存，知道达到-Xmx指定的内存后抛出OOM
-	 但要注意如果指定的-Xms过小，则GC的动作会比较频繁。
+     如果JVM启动时分配的-Xms不足以使用，会申请更多的内存，直到达到-Xmx指定的内存后抛出OOM
+	 但要注意如果指定的-Xms过小，则GC的动作会比较频繁。所以可以将-Xmx和-Xms设置为一样大小。
+	 
 -Xmn：设置java堆中新生代的大小(Eden + survior to + survior from), 新生代大小一般占内存的1/4 到1/3左右
+
 -XX:NewSize用于设置新生代的初始化大小
+
 -XX:MaxNewSize用于设置新生代初始化的最大大小，设置-Xmn相当于设置了-XX:NewSize以及-XX:MaxNewSize相同的值
 
--XX:SurvivorRatio设置新生代中Eden区与Survivor区域的大小(两个Survivor区是一样大的)
+-XX:SurvivorRatio设置新生代中Eden区与Survivor区域的大小(两个Survivor区是一样大的) 默认值为8
 例如：-XX:SurvivorRatio=3 表示Eden / (单个Survivor) = 3  ==> Eden / (2 * Survivor) = 1.5
 
--XX:TargetSurvivorRatio:设置Survivor区的可使用率，当使用率大于该值时，该区域对象将会向老年代压缩，默认是50%
+-XX:TargetSurvivorRatio:设置Survivor区的可使用率，当使用率大于该值时，该区域对象将会向老年代压缩，默认是50%。
+
 -XX:MaxTenuringThreshold:设置经过几次LJ回收进入老年代,默认为15次。但有两种例外:
                                                                     1、大数据直接进入老年代。如果分配对象所占内存较大，将直接进入老年代。
 																	2、当Survivor区域的某一年龄的对象占该区域大小的一定值(好像是50%)时，该区域所有大于等于该年龄的对象都会进入老年代
+
 -XX:PretenureSizeThreshold: 设置大对象直接进入老年代的阈值，当对象分配的大小大于等于该值时，对象将直接进入老年代。
 							这个参数不能像-Xmn一样跟3MB 必须像这样：-XX:PretenureSizeThreshold=3145728.且只有Serial和ParNew两款收集器才有效
 			
--XX:HandlePromotionFailure:发生Minor GC前，虚拟机会先检查老年代的最大可用连续空间是否大于新生代的所有对象总空间。如果条件成立，则这次Minor GC是安全的。
+-XX:+HandlePromotionFailure:发生Minor GC前，虚拟机会先检查老年代的最大可用连续空间是否大于新生代的所有对象总空间。如果条件成立，则这次Minor GC是安全的。
                            如果不成立，则会查看该值是否允许担保失败，如果允许，虚拟机查看最大可用连续空间是否大于历次晋升到老年代对象的平均大小，如果大于则会尝试进行一次Minor GC。否则改为进行Full GC
 						   eg、-XX:-HandlePromotionFailure //false 已被废弃。
 																	
@@ -36,14 +41,24 @@
 -XX:PermSize 设置持久代(永久代方法区)初始大小。已被-XX:MetaspaceSize代替
 -XX:MaxPermSize 设置持久代的最大初始大小 一般设置为64MB和128MB，如果这样还不能满足需求，需要对系统进行优化。已被-XX:MaxMetaspaceSize代替
 
--XX:MaxDirectMemorySize 设置NIO包装区内存大小。
-
--XX:+PrintGCDetails 打印出GC日志
+-XX:MaxDirectMemorySize制定直接内存大小。JDK1.4后加入的NIO就是使用这部分内存。只有ByteBuffer的directAllocate方法才会使用这块内存
 
 -XX:MinHeapFreeRatio 设置堆的最小空闲比例，当堆的空闲内存小于该值时，JVM便会扩展堆空间
 eg、 -XX:MinHeapFreeRatio=40 当堆的空闲比例大于40时就会扩展堆空间
 -XX:MaxHeapFreeRatio 设置堆的最大空闲比例，当堆的空闲内存大于该值时，JVM便会压缩堆
 eg、-XX:MaxHeapFreeRatio=80 当堆的最大空闲比例大于80时就会压缩堆空间
+============================================================================================================================
+
+       Java 运行时 GC日志参数设置
+	   
+============================================================================================================================
+-XX:+PrintGC          输出GC简易信息
+-XX:+PrintGCDetails   输出GC详细信息
+-verbose:gc           输出GC简易信息
+-XX:+PrintGCTimeStamps 输出GC发生的时间
+打印堆信息:-XX:+PrintHeapAtGC:在GC日志后打印堆的信息。
+将日志打印到文件中；-Xloggc:C:\a.log
+
 ============================================================================================================================
 
        Java 运行时 GC参数设置
@@ -65,7 +80,6 @@ eg、-XX:MaxHeapFreeRatio=80 当堆的最大空闲比例大于80时就会压缩�
 -XX:+UseSerialGC:新生代与老年代都使用串行独占式LJ回收器(最古老的LJ回收器，但性能经受住了考验)
 -XX:+UseParNewGC:新生代使用并行LJ回收器，老年代使用串行LJ回收器
 -XX:+UseParallelGC: 新生代使用并行回收，老年代使用串行回收
--XX:ParallelGCThreads=20 设置20条线程进行lj回收
 -XX:+UseParallelOldGC:新生代与老年代都使用并行回收器
 -XX:+UseConcMarkSweepGC:新生代使用并行收集，老年代使用CMS收集
 -XX:ParallelCMSThreads:设定CMS的线程数量
@@ -82,9 +96,7 @@ eg、-XX:MaxHeapFreeRatio=80 当堆的最大空闲比例大于80时就会压缩�
 
 并行收集器的线程数可以使用-XX:ParalleGCThreads指定，一般下 最好与CPU数相当，
 ps:新生代GC叫做Minor GC 老年代GC叫做Full GC/ Major GC。Full GC的成本高于Minor GC。 发生一次Full GC通常会伴随着至少一次的Minor GC。且Full GC的速度比Minor GC慢10倍以上。
-
--XX:MaxDirectMemorySize制定直接内存大小。JDK1.4后加入的NIO就是使用这部分内存。只有ByteBuffer的directAllocate方法才会使用这块内存
-
+更正ps：发生了stw现象的为full gc
 ================================================================================================================================
 
                JIT编译参数设置
@@ -98,33 +110,12 @@ ps:新生代GC叫做Minor GC 老年代GC叫做Full GC/ Major GC。Full GC的成�
              -XX:+CITime打印出JIT编译耗费的时间。
 			 -XX:+PrintCompilation打印出JIT编译时的信息。
 
-当发生OOM时，可以将当前堆快照存储以便事后分析：-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=F:\a.txt
-
-OOM错误处理：-XX:OnOutOfMemoryError=F:\a.bat
-
-打印GC日志：
-          /** -XX:+PrintGC          输出GC简易信息
-		   *  -XX:+PrintGCDetails   输出GC详细信息
-		   *  -verbose:gc           输出GC简易信息
-		   *
-		   *  -XX:+PrintGCTimeStamps 输出GC发生的时间    
-		   */
-
-查看新生对象进入老年代的阈值：-XX:+PrintTenuringDistribution -XX:MaxTenuringThreshold=18
-
-打印堆信息:-XX:+PrintHeapAtGC:在GC日志后打印堆的信息。
-
-查看GC与应用程序相互执行的耗时：—XX:+PrintGCApplicationStopTime -XX:+PrintApplicationConcurrentTime
-
-将日志打印到文件中；-Xloggc:C:\a.log
-
 =========================================优化======================================================================================
 
-禁用代码显示调用GC：-XX:+DisableExplicitGC
+禁用代码显示调用GC：-XX:+DisableExplicitGC 例如System.gc()调用后将不会进行GC
 
 为了加快启动速度，如果加载的类是可信任的，可以使用参数-Xverify:none跳过class的验证与校检
 为了加快Minor GC的速度：新生代使用并行收集器:-XX:+UseParallelGC
-
 
 
 浅堆：指对象结构占用内存大小，比如String对象 浅堆大小 三个int + byte[] = 3 * 4 + 4 + 8(对象头) = 24.无论字符串多大，它的浅堆大小始终是24
@@ -144,6 +135,27 @@ OOM错误处理：-XX:OnOutOfMemoryError=F:\a.bat
                        可以对Class的属性指针，对象的属性指针，普通数组对象的每个元素指针
 -XX:+UseLargePages 启动大页 可以提升系统性能
 -XX:LargePageSizeInBytes 指定大页的大小 -XX:LargePageSizeInBytes=256m
+当发生OOM时，可以将当前堆快照存储以便事后分析：-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=F:\a.txt
+                  使用jhat指令可以分析堆快照
+OOM错误处理：-XX:OnOutOfMemoryError=F:\a.bat
+
+打印GC日志：
+          /** -XX:+PrintGC          输出GC简易信息
+		   *  -XX:+PrintGCDetails   输出GC详细信息
+		   *  -verbose:gc           输出GC简易信息
+		   */
+
+查看新生对象进入老年代的阈值：-XX:+PrintTenuringDistribution -XX:MaxTenuringThreshold=18
+
+
+查看GC与应用程序相互执行的耗时：—XX:+PrintGCApplicationStopTime -XX:+PrintApplicationConcurrentTime
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+锁的强度
+无锁 --> 偏向锁 --> 轻量级锁 --> 重量级锁 强度只能升级 不能降级
+
+-XX:BiasedLockingStartupDelay=0 JAVA6 / JAVA7 偏向锁在程序启动后会有延迟 可以使用这个参数设置延迟
+-XX:UseBiasedLocking=false 关闭偏向锁，默认是开启的
 
 
 

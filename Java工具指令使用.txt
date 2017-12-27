@@ -48,7 +48,8 @@ jmap:java内存映射工具
  -permstat 以ClassLoader为入口统计显示永久代内存状态，在linux以及solaris下有效
  -F 当-dump生成快照时没有响应，可以使用这个参数强制生产快照，只在linux以及solaris下适用
  
- jmap -dump：format=b，file=eclipse.bin 2288 会生成一个文件可以使用jhat指令来分析
+ jmap -dump:format=b,file=g:/idea.bin 3388
+ 会生成一个文件可以使用jhat指令来分析
  
  
 jhat：虚拟机堆转储快照分析工具(内置了一个HTTP/HTML的服务器) 解析完成后再7000端口查看结果

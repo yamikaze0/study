@@ -1,0 +1,37 @@
+Memcached指令
+1、set key 0 expireTime length
+data
+
+data的长度必须与length一致，可覆盖key
+
+2、get key 获取值
+gets key1 key2 获取多个值
+
+3、append key 0 0 length 
+data
+
+向指定字符串后面追加length长度的数据
+data 追加的数据
+
+4、prepend key 0 0 length
+data
+
+向指定字符串前面加上length长度的数据
+data追加的数据
+
+5、delete key
+删除某个key，如果key存在返回deleted，不存在返回not found
+
+6、replace key 0 expireTime length
+data
+
+替换key对应的数据，仅当key存在时才进行替换
+
+7、add key 0 expireTime length
+data
+
+增加key，仅当key不存在时才进行set
+
+8、decr/incr 自减/自增1 仅当key对应的value为数字类型的字符串
+
+9、flush_all 用于清理缓存中的所有key-value对，谨慎使用

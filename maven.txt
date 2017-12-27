@@ -1,3 +1,52 @@
+maven是什么？
+     maven是一个项目构建工具。
+maven能干什么？
+     可以使用一小段简短的描述引入依赖，管理项目的依赖，快速打包等
+maven安装
+     maven官网下载http://maven.apache.org/download.cgi
+	 先决条件：
+	        1、对应版本的Java已经安装，并且JAVA_HOME，CLASSPATH，Path正确配置
+            2、内存10M
+	 下载解压包后将bin路径加入到系统路径中去，
+	 linux操作系统需要在/etc/profile文件最后一行加入export "PATH=${PATH}:你的路径"，值得注意的是linux是使用:作为路径分隔，而windows使用;
+maven项目结构
+     假设项目名为maven-first
+	 maven-first
+	     src
+		    main   --项目代码以及配置文件
+			    java --code，代码存放在这下面
+				resources --配置文件
+			test   --项目测试代码以及测试配置文件
+			    java --code，测试代码
+				resources --测试配置文件
+			webapp --如果是web项目有这个文件夹
+	     pom.xml   --项目依赖描述文件
+		 target    --编译后的代码class文件以及打包的文件存在于这个目录，这个目录并不是必须的。
+		 
+maven如何确定依赖？
+     maven是根据GAV坐标来确定依赖jar的位置的。
+	 G --gruopId
+	 A --artifactId
+	 V --version
+maven到哪儿寻找依赖？
+      首先回到本地仓库中寻找，如果没有找到就会到中央仓库寻找(默认中央仓库，中央仓库地址mvnrepository.com)，你也可以配置为阿里的仓库，这样下载速度会快一点。
+	  本地没有找到，则回去中央仓库寻找，如果找到，则下载到本地仓库，然后下次其他项目引用这个jar时就可以直接从本地仓库找到了。
+maven仓库的配置
+      settings.xml文件中<localRepository>g:/maven/repos</localRepository>，默认情况下是用户home目录下的.m2目录下repository目录
+	  
+maven与ide配置
+
+maven的依赖特性
+     --依赖范围
+	 --依赖的传递性
+	 --解决依赖冲突
+
+maven的聚合与继承
+
+maven生命周期
+
+maven私服搭建
+
 maven 三套生命周期 clean default site
 scope的值
 
